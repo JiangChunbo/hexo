@@ -1,0 +1,29 @@
+<div id="article-banner">
+  <h2>Categories</h2>
+  <p class="post-date">Categories</p>
+</div>
+<main class="app-body" id="categories">
+  <% let categories = {}; %>
+  <%
+    site.posts.each(post => {
+      if (post.categories.length > 0) {
+        const category = post.categories.data[0].name;
+        if (!categories[category]) {
+          categories[category] = [];
+        }
+        categories[category].push(post);
+      }
+    })
+  %>
+
+</main>
+<% for (let category of Object.keys(categories).reverse()) { %>
+  <%- partial('_partial/categories', { 'category': category, posts: categories[category].reverse() }) %>
+<% } %>
+<script>
+  (function () {
+    var url = '<%= config.url %>/<%= page.path %>';
+    $('#article-banner').geopattern(url);
+    $('.header').removeClass('fixed-header');
+  })();
+</script>
