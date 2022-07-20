@@ -28,10 +28,10 @@ qrcode: true
 
 # comment
 # you can set utterances, gitment, uyan or disqus
-comment: gitment
+comment: utterances
 
 # utterances config
-utterances_repo:                # e.g. GitHubAccount/RepoForUtterances
+utterances_repo: JiangChunbo/jiangchunbo.github.io               # e.g. GitHubAccount/RepoForUtterances
 utterances_issue_term: pathname # you can see other available options at 'https://utteranc.es/'
 utterances_theme: github-light  # you can see other available options at 'https://utteranc.es/'
 
@@ -43,12 +43,12 @@ gitment_oauth_secret: ccbfc51ce15c59b57e0fe4a4dea81060976bbde3
 
 # uyan config
 # if you want to use uyan as your blog comment, plz remove/comment out gitment config
-baidu_id: 
-google_analytics: 
+baidu_id:
+google_analytics:
 # disqus config
-disqus_shortname: 
+disqus_shortname:
 
-about: 
+about:
   banner: ""
   avatar: https://avatars.githubusercontent.com/u/50109770?s=96&v=4
   description: "The end is always near."
@@ -57,7 +57,7 @@ about:
   # github_username: yanm1ng
   # zhihu_username: yummy1121
   # douban_username: yanm1ng
-  # linkedin_username: 
+  # linkedin_username:
 
 # MathJax Support
 mathjax:
