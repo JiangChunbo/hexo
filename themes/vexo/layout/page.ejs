@@ -56,7 +56,7 @@
         issue-term="<%= theme['utterances_issue_term'] %>"
         theme="<%= theme['utterances_theme'] %>"
         crossorigin="anonymous"
-        async></script>    
+        async></script>
       <!-- Utterances END -->
     <% } else if (theme.comment === 'gitment') { %>
       <!-- Gitment START -->
@@ -146,7 +146,7 @@
   <script>
     var gitmentConfig = "<%= theme['gitment_owner'] %>";
     if (gitmentConfig !== 'undefined') {
-      var gitment = new Gitment({
+      var gitment = new Gitalk({
         id: "<%- page.title %>",
         owner: "<%= theme['gitment_owner'] %>",
         repo: "<%= theme['gitment_repo'] %>",
