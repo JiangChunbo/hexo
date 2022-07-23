@@ -162,9 +162,9 @@ public class MyWebAppInitializer extends AbstractAnnotationConfigDispatcherServl
 
 #### [1.1.2. Special Bean Types](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/web.html#mvc-servlet-special-bean-types)
 
-`DispatcherServlet` 委托特殊的 bean 来处理请求并给予合适的响应。具体见官网列表。
+`DispatcherServlet` 委托特殊的 Bean 来处理请求并给予合适的响应。通过“特殊 Bean”，我们意思是实现了框架约定的由 Spring 管理的 `Object`。这些通常带有内置的约定，但是你可以定制化它们的属性并扩展或更换它们。
 
-下面的表格列出了由 `DispatcherServlet` 检测的特殊 bean：
+下面的表格列出了由 `DispatcherServlet` 检测的特殊 Bean：
 
 |Bean Type|描述|
 |:---|:---|

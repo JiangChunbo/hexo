@@ -40,7 +40,7 @@ tags:
 (3) dirname 表示生成的本地文件夹名称，默认为仓库名
 
 
-&nbsp;
+
 ## Branching and Merging
 ### [branch](https://git-scm.com/docs/git-branch)
 ```bash
@@ -135,6 +135,16 @@ git branch [--color[=<when>] | --no-color] [--show-current]
 ### `git rm -r --cached <dir>`
 删除文件夹缓存。可以将已经被 git 跟踪，但从此不想被跟踪的文件进行缓存删除。-r 代表递归，用于文件夹。
 
+
+## Administration
+
+
+### `clean`
+
+删除所有未跟踪的文件
+```bash
+git clean -d -f
+```
 
 ## stash
 ### `git stash`

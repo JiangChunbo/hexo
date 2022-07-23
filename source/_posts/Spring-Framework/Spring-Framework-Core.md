@@ -2394,26 +2394,35 @@ public class MyService {
 
 
 ## [5. Aspect Oriented Programming with Spring](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop)
-面向切面编程（AOP）提供了另一种关于编程结构的思考方式，以对面向对象编程（OOP）进行补充。OOP 中模块化的关键单元是类，而 AOP 中，模块化的单位是切面。
+面向切面编程（AOP）提供了另一种关于编程结构的思考方式，以对面向对象编程（OOP）进行补充。OOP 中关键的模块化单元是类，而 AOP 中，模块化单元是切面。切面使横跨多个类和对象切入的关注点（例如事务管理）模块化成为可能。（此类关注点通常在 AOP 的文献中称为“横切”关注点。）
 
-Spring 的关键组件之一是 AOP 框架。Spring IoC 容器不依赖于 AOP（意味着你不必须使用 AOP），AOP 补充了 Spring IoC，提供了一个非常有用的中间件解决方案。
+Spring 的关键组件之一就是 AOP 框架。尽管 Spring IoC 容器不依赖于 AOP（意味着，如果你不想用，你就不必使用 AOP），但是 AOP 补充了 Spring IoC，提供了一个功能强大的中间件解决方案。
+
+
+> <p align="center">Spring AOP 和 AspectJ pointcuts</p>
+> Spring 要不通过使用基于 schema 的方式，要不通过 `@AspectJ` 注解风格提供了简易且强大的写入自定义切点的方式。这两种方式都提供了完全的类型 Advice 并且 AspectJ 切点语言的使用同时也是用 Spring AOP 进行编织。
+> 本章讨论了基于 schema 以及基于 @AspectJ 的 AOP 支持。下一章将讨论低级的 AOP 支持。
+
+
 
 AOP 在 Spring Framework 中能做什么：
 
-- 提供声明式企业服务。最重要的此类服务是声明式事务管理
+- 提供声明式企业服务。最重要的此类服务是[声明式事务管理](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/data-access.html#transaction-declarative)
 - 让用户实现自定义切面，用 AOP 补充他们的 OOP
 
 
 ### [5.1. AOP Concepts](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-introduction-defn)
 
-- **Aspect**：切面，一个横跨多个类的模块化。事务管理是企业 Java 应用程序中横切问题很好的例子。在 Spring AOP 中，切面是通过使用常规类或者基于 @Aspect 注解的常规类。
-- **Join point**：连接点，执行程序期间的一个点，可以是一个方法的执行或者一个异常的处理。在 Spring AOP 中，连接点就是代表一个方法的执行。
-- **Advice**：通知，一个切面在特定连接点采取的行动。不同类似的通知包括 around，before，after。许多 AOP 框架，包括 Spring，将 advice 模型为一个拦截器，并在连接点周围维护一系列拦截器。
-- **Pointcut**：切入点，匹配连接点的谓词。advice 与 pointcut 表达式关联，并且在切点匹配的任何 join point 执行。由 pointcut 表达式匹配的 join point 的概念是 AOP 的重点。默认，Spring 使用 AspectJ pointcut 表达式语言。
-- **Introduction**：声明额外的方法或字段。
-- **Target object**：由一个或多个切面通知的对象。
-- **AOP proxy**：由 AOP 框架创建的对象，以实现切面约定（通知方法执行等）。在 Spring 框架中，AOP 代理可以是 JDK 动态代理或者是 CGLIB 代理。
-- **Weaving**：将切面与其他应用类型或对象链接，以创建一个通知对象。
+让我们通过定义一些核心 AOP 概念和术语开始。这些术语不是 Spring 特有的。不幸地是，AOP 术语不是特别直观。但是，如果 Spring 使用自己的术语，那将更加令人困惑。
+
+- Aspect：切面，一个横跨多个类的模块化。事务管理是企业 Java 应用程序中横切问题很好的例子。在 Spring AOP 中，切面是通过使用常规类或者基于 @Aspect 注解的常规类。
+- Join point：连接点，执行程序期间的一个点，可以是一个方法的执行或者一个异常的处理。在 Spring AOP 中，连接点就是代表一个方法的执行。
+- Advice：通知，一个切面在特定连接点采取的行动。不同类似的通知包括 around，before，after。许多 AOP 框架，包括 Spring，将 advice 模型为一个拦截器，并在连接点周围维护一系列拦截器。
+- Pointcut：切入点，匹配连接点的谓词。advice 与 pointcut 表达式关联，并且在切点匹配的任何 join point 执行。由 pointcut 表达式匹配的 join point 的概念是 AOP 的重点。默认，Spring 使用 AspectJ pointcut 表达式语言。
+- Introduction（引入）：代表一个类声明额外的方法或字段。Spring AOP 让你可以将新的接口（以及相关实现）引入任何通知对象。例如，你可以使用一个 introduction 使 Bean 实现一个 `IsModified` 接口，以简化缓存。（一个 introduction 在 AspectJ 社区中称为类内声明）
+- Target object：由一个或多个切面通知的对象。
+- AOP proxy：由 AOP 框架创建的对象，以实现切面约定（通知方法执行等）。在 Spring 框架中，AOP 代理可以是 JDK 动态代理或者是 CGLIB 代理。
+- Weaving：将切面与其他应用类或对象链接，以创建一个通知对象。这可以在编译时（例如。使用 AspectJ 编译器），加载时，或者运行时完成。像其他纯 Java AOP 框架一样，Spring AOP 在运行时进行编织。
 
 Spring AOP 包括下面通知类型：
 
@@ -2423,8 +2432,12 @@ Spring AOP 包括下面通知类型：
 - After (finally) advice
 - Around advice
 
-&nbsp;
+
 ### [5.3. AOP Proxies](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-introduction-proxies)
+
+Spring AOP 默认使用标准 JDK 动态代理作为 AOP 代理。这使得可以代理任何接口（或者一组接口）。
+
+Spring AOP 也可以使用 CGLIB 代理，者必须代理类而不是接口。默认地，如果业务对象没有实现接口，则使用 CGLIB。由于最好的实践是面向接口编程而不是类，业务类通常实现一个或多个业务接口。在你需要通知一个未声明在接口的方法，或者需要将代理对象作为固定类型传递给一个方法时，可以[强制使用 CGLIB](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-proxying)。
 
 
 ### [5.4. @AspectJ support](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-ataspectj)
@@ -2437,7 +2450,7 @@ Spring AOP 包括下面通知类型：
 
 与其他任何类相同，切面（使用 @Aspect 注解的类）可以拥有方法和字段。他们也可以包含切入点，通知，和介绍声明。
 
-&nbsp;
+
 #### [5.4.3. Declaring a Pointcut](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-pointcuts)
 切入点可以确定感兴趣的连接点，从而让我们控制通知的运行时机。Spring AOP 仅仅支持方法 Spring bean 的方法执行连接点，因此你可以考虑 Spring bean 上的方法执行匹配的切入点。
 
@@ -2561,7 +2574,7 @@ public class AfterThrowingExample {
 
 **注意** 可以在 Around 通知体中调用一次，多次，或者不调用 `proceed()` 方法。这些都是合法的。
 
-&nbsp;
+
 ##### [Access to the Current JoinPoint](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-ataspectj-advice-params-the-joinpoint)
 任何的通知方法都可以声明 org.aspectj.lang.JoinPoint 类型参数，作为它的第一个参数。
 
