@@ -10,13 +10,17 @@ tags:
 `SpringShiroFilter` 是 Shiro 整合 Spring Web 提供的一个 `Filter`，通过将其配置到 Servlet 容器的过滤器链中参与处理。
 
 
-1. 包装 Request 和 Response，使它们由原来的 HttpServlet 系列包装为 ShiroHttpServletRequest
+1. 包装 Request 和 Response，使它们由原来的 HttpServlet 系列包装（装饰）为 ShiroHttpServletRequest
 
-2. 创建 Subject，传递给接下来的过滤器，通过 ThreadLocal
+> 装饰器设计模式，扩展了一些功能
 
-如果没有定义任何 FilterChainDefinitionMap，那 Shiro 也会把 Request 交给它默认的 SpringShiroFilter 过滤。
+2. 创建 Subject，传递给接下来的过滤器（通过 ThreadLocal）；
 
-3. 更新 SessionLastAccessTime（native sessions）
+如果没有定义任何 `FilterChainDefinitionMap`，那 Shiro 也会把 Request 交给它默认的过滤器过滤。
+
+3. 寻找合适的 `FilterChain`，如果找到则转交给该 `FilterChain` 过滤
+
+4. 更新 SessionLastAccessTime（native sessions）
 
 
 以下是 `SpringShiroFilter` 的代码清单：
@@ -28,6 +32,7 @@ protected void doFilterInternal(ServletRequest servletRequest, ServletResponse s
     Throwable t = null;
 
     try {
+        // 装饰原生 request response
         final ServletRequest request = prepareServletRequest(servletRequest, servletResponse, chain);
         final ServletResponse response = prepareServletResponse(request, servletResponse, chain);
 
@@ -65,7 +70,41 @@ protected void doFilterInternal(ServletRequest servletRequest, ServletResponse s
 ```
 
 
+从上述代码可以看到，subject 对象并不是直接调用相关的方法，而是通过向 execute 方法传递一个 `Callable`，该 `Callable` 实际会被 Shiro 的 `SubjectCallable` 包装起来，可以认为是一种装饰器模式。`SubjectCallable` 调用如下：
+
+```java
+public V call() throws Exception {
+    try {
+        // threadState 实际上是 SubjectThreadState
+        // bind 方法底层会将 subject, securityManager 都绑定到一个 Map 的 ThreadLocal
+        threadState.bind();
+
+        // 实际调用被装饰的 callable
+        return doCall(this.callable);
+    } finally {
+        threadState.restore();
+    }
+}
+
+protected V doCall(Callable<V> target) throws Exception {
+    return target.call();
+}
+```
+
+Subject 执行 executeChain 的代码清单如下：
+
+```java
+protected void executeChain(ServletRequest request, ServletResponse response, FilterChain origChain) throws IOException, ServletException {
+    // 寻找合适的 FilterChain
+    // 可能是 Tomcat 原生（未找到），也可能是 Shiro 自己链
+    FilterChain chain = getExecutionChain(request, response, origChain);
+    chain.doFilter(request, response);
+}
+```
+
 以下是通过 requestURI 获取 FilterChain 的方法：
+
+
 
 ```java
 public FilterChain getChain(ServletRequest request, ServletResponse response, FilterChain originalChain) {
