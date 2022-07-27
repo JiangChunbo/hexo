@@ -29,9 +29,9 @@ public SpringApplication(ResourceLoader resourceLoader, Class<?>... primarySourc
     // 资源加载器，默认 null
     this.resourceLoader = resourceLoader;
     Assert.notNull(primarySources, "PrimarySources must not be null");
-    // 主要加载资源类，Set 去重
+    // 主要资源类，Set 去重
     this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
-    // 推断 Web 环境，底层通过 classpath 检测，NONE, SERVLET, REACTIVE
+    // 推断 Web 环境，底层通过 classpath 是否包含特定类检测，NONE, SERVLET, REACTIVE
     this.webApplicationType = WebApplicationType.deduceFromClasspath();
     // 设置应用上下文初始化器 （从 META-INF/spring.factories）
     setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
@@ -41,6 +41,8 @@ public SpringApplication(ResourceLoader resourceLoader, Class<?>... primarySourc
     this.mainApplicationClass = deduceMainApplicationClass();
 }
 ```
+
+> 上面之所以要加载 `ApplicationListener` 保存到 `SpringApplication`，是因为下面要传递给 `ApplicationEventMulticaster`。`SpringApplication` 作为 `EventPublishingRunListener` 参数传入。
 
 
 `SpringApplication` 运行方法：
@@ -57,7 +59,8 @@ public ConfigurableApplicationContext run(String... args) {
     // 将所有 SpringApplicationRunListener 封装到 SpringApplicationRunListeners
     // 底层会读取 spring.factories 的 org.springframework.boot.SpringApplicationRunListener
     SpringApplicationRunListeners listeners = getRunListeners(args);
-    // 发布 ApplicationStartingEvent 应用启动事件
+
+    // 立即发布 ApplicationStartingEvent 应用启动事件
     listeners.starting();
     try {
         // 初始化默认应用参数类
@@ -127,16 +130,20 @@ private void configureHeadlessProperty() {
 
 ## getRunListeners
 
-> 这里是 `SpringApplicationRunListener`，注意与 `ApplicationListener` 区别
 
+该方法返回一个 `SpringApplicationRunListeners` 实例，注意末尾有一个 "s"。
 
 ```java
+// SpringApplication
 private SpringApplicationRunListeners getRunListeners(String[] args) {
     Class<?>[] types = new Class<?>[] { SpringApplication.class, String[].class };
+    // 传入的 this 参数就是 SpringApplication
     return new SpringApplicationRunListeners(logger,
             getSpringFactoriesInstances(SpringApplicationRunListener.class, types, this, args));
 }
 ```
+
+> 照应前面所说，之所以将 `SpringApplication` 传入，作为后续的构造器参数，是因为后面需要往 `ApplicationEventMulticaster` 加入 `ApplicationListener`，而 `ApplicationListener` 已经在 `SpringApplication` 的构造器加载完毕
 
 ```java
 private <T> Collection<T> getSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes, Object... args) {
@@ -156,7 +163,7 @@ public EventPublishingRunListener(SpringApplication application, String[] args) 
     this.args = args;
     // 事件多播器
     this.initialMulticaster = new SimpleApplicationEventMulticaster();
-    // application.getListeners() 获得 ApplicationListener
+    // 获得所有发现的 ApplicationListener
     for (ApplicationListener<?> listener : application.getListeners()) {
         // 添加到事件多播器
         this.initialMulticaster.addApplicationListener(listener);
@@ -166,6 +173,8 @@ public EventPublishingRunListener(SpringApplication application, String[] args) 
 
 
 ## listeners.starting()
+
+在获得了 `SpringApplicationRunListeners` 之后立即发布一个事件，告诉所有 `ApplicationListener` 容器正在启动。
 
 通常这里只有 1 个 listeners，即 `EventPublishingRunListener`。
 
@@ -181,6 +190,7 @@ void starting() {
 
 ```java
 public void starting() {
+    // 构造一个事件广播
     this.initialMulticaster.multicastEvent(new ApplicationStartingEvent(this.application, this.args));
 }
 ```
@@ -206,6 +216,8 @@ public void multicastEvent(final ApplicationEvent event, @Nullable ResolvableTyp
     }
 }
 ```
+
+获得关心该事件的 `ApplicationListener`
 
 ```java
 protected Collection<ApplicationListener<?>> getApplicationListeners(ApplicationEvent event, ResolvableType eventType) {
@@ -256,17 +268,21 @@ protected Collection<ApplicationListener<?>> getApplicationListeners(Application
 - LiquibaseServiceLocatorApplicationListener
 
 
-## java
+## prepareEnvironment
+
+准备环境。也会发布事件
 
 ```java
-private ConfigurableEnvironment prepareEnvironment(SpringApplicationRunListeners listeners,
+private ConfigurableEnvironment prepareEnvironment(
+        SpringApplicationRunListeners listeners,
         ApplicationArguments applicationArguments) {
     // Create and configure the environment
-    // 根据 webApplicationType 创建
+    // 根据 webApplicationType 实例化 Environment，注意其间不断调用父类默认构造器
     ConfigurableEnvironment environment = getOrCreateEnvironment();
-    // 配置环境，设置 ConversionService、
+    // 配置环境，设置 ConversionService；添加命令行
     configureEnvironment(environment, applicationArguments.getSourceArgs());
     ConfigurationPropertySources.attach(environment);
+    // 发布事件
     listeners.environmentPrepared(environment);
     bindToSpringApplication(environment);
     if (!this.isCustomEnvironment) {
@@ -278,6 +294,47 @@ private ConfigurableEnvironment prepareEnvironment(SpringApplicationRunListeners
 }
 ```
 
+
+补充一下 `StandardServletEnvironment` 构造器做了什么:
+```java
+// AbstractEnvironment
+public AbstractEnvironment() {
+    // customizePropertySources 是一个空实现
+    // 这里传入了 this 属性，但可以不传?
+    customizePropertySources(this.propertySources);
+}
+```
+
+以下是 `StandardServletEnvironment` 对于 `customizePropertySources` 的覆盖（定制化）：
+
+```java
+// StandardServletEnvironment
+protected void customizePropertySources(MutablePropertySources propertySources) {
+    // 添加 servletConfigInitParams
+    propertySources.addLast(new StubPropertySource(SERVLET_CONFIG_PROPERTY_SOURCE_NAME));
+    // 添加 servletContextInitParams
+    propertySources.addLast(new StubPropertySource(SERVLET_CONTEXT_PROPERTY_SOURCE_NAME));
+    if (JndiLocatorDelegate.isDefaultJndiEnvironmentAvailable()) {
+        propertySources.addLast(new JndiPropertySource(JNDI_PROPERTY_SOURCE_NAME));
+    }
+    // 注意，这里也调用了父类 StandardEnvironement 的方法
+    super.customizePropertySources(propertySources);
+}
+```
+
+以下是 `StandardEnvironement` 关于 `customizePropertySources` 方法的覆盖（定制化）: 
+
+```java
+// StandardEnvironement
+protected void customizePropertySources(MutablePropertySources propertySources) {
+    // 添加系统属性
+    propertySources.addLast(
+            new PropertiesPropertySource(SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME, getSystemProperties()));
+    // 添加环境变量
+    propertySources.addLast(
+            new SystemEnvironmentPropertySource(SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, getSystemEnvironment()));
+}
+```
 
 ## prepareContext
 
