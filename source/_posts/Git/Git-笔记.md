@@ -77,6 +77,10 @@ git branch [--color[=<when>] | --no-color] [--show-current]
 
 
 
+### `git branch --set-upstream-to=<远程主机>/<远程分支> <本地分支>`
+
+
+
 &nbsp;
 ## remote
 管理被跟踪仓库的设置
