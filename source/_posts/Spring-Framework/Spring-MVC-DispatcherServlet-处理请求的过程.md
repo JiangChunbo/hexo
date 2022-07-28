@@ -53,6 +53,7 @@ protected void doDispatch(HttpServletRequest request, HttpServletResponse respon
                 }
             }
 
+            // 前置处理，应用一些拦截器，如果返回 false，则不再处理，或者抛出异常被 catch
             if (!mappedHandler.applyPreHandle(processedRequest, response)) {
                 return;
             }
@@ -66,6 +67,7 @@ protected void doDispatch(HttpServletRequest request, HttpServletResponse respon
             }
 
             applyDefaultViewName(processedRequest, mv);
+            // 后置处理，应用一些拦截器
             mappedHandler.applyPostHandle(processedRequest, response, mv);
         }
         catch (Exception ex) {
@@ -76,6 +78,7 @@ protected void doDispatch(HttpServletRequest request, HttpServletResponse respon
             // making them available for @ExceptionHandler methods and other scenarios.
             dispatchException = new NestedServletException("Handler dispatch failed", err);
         }
+        // 包括调用 HandlerInterceptor.afterCompletion
         processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
     }
     catch (Exception ex) {

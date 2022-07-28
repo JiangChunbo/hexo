@@ -788,6 +788,54 @@ H2 数据库提供了一个基于浏览器的控制台，Spring Boot 可以为�
 ### [12.1. Redis](https://docs.spring.io/spring-boot/docs/2.3.12.RELEASE/reference/html/spring-boot-features.html#boot-features-redis)
 
 
+## [13. Caching](https://docs.spring.io/spring-boot/docs/2.3.12.RELEASE/reference/html/spring-boot-features.html#boot-features-caching)
+
+Spring Framework 为透明地将缓存添加到应用提供了支持。从其核心，抽象将缓存应用于方法，从而根据缓存中可用的信息减少了执行次数。缓存逻辑是透明地应用的，不会对调用者进行任何干扰。只要通过 `@EnableCaching` 注解启用缓存支持，Spring Boot 就会自动配置缓存基础架构。
+
+简而言之，为了将缓存添加到服务的操作中，将相关的注解添加到其方法中，如下图所示：
+
+```java
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MathService {
+
+    @Cacheable("piDecimals")
+    public int computePiDecimal(int i) {
+        // ...
+    }
+
+}
+```
+
+该示例证明了在可能高成本的操作中使用缓存。在调用 `computePiDecimal`，抽象在 `piDecimals` 缓存中匹配 `i` 参数的条目。如果找到条目，则立即将缓存中的内容返回给调用者，并且该方法不会调用。否则，将调用方法，在返回该值之前更新缓存。
+
+> 你还可以透明地使用标准 JSR-107(JCache) 注解（例如 `@CacheResult`）。但是，我们强烈建议你不要混合并匹配 Spring Cache 和 JCache 注解。
+
+
+如果你没有添加任何特定的缓存库，Spring Boot 自动配置一个在内存的使用 concurrent map 的 simple provider。当需要缓存（例如在前面例子中的 `piDecimals`）时，该 provider 就会为你创建一个。实际上，并不建议将 simple provider 用于生产，但是它非常适合入门，以及确保你了解这些功能。当你决定要使用 cache provider 时，请确保阅读其文档，以找出如何配置应用程序使用的缓存。几乎所有的 provider 都要求你显式配置每个你在应用中使用的缓存。有些提供一种自定义默认缓存的方法，通过定义 `spring.cache.cache-names` 属性。
+
+> 也可以透明地更新或从缓存中驱逐数据
+
+### [13.1. Supported Cache Providers](https://docs.spring.io/spring-boot/docs/2.3.12.RELEASE/reference/html/spring-boot-features.html#boot-features-caching-provider)
+
+缓存抽象并不提供实际的存储，并依赖于由 `org.springframework.cache.Cache` 和 `org.springframework.cache.CacheManager` 接口实现的抽象。
+
+如果你没有定义 `CacheManager` 类型的 Bean 或者名为 `cacheResolver` 的 `CacheResolver`，Spring Boot 会尝试检测以下 provider（按照指示的顺序）：
+
+- Generic
+- JCache (JSR-107)(EhCache 3, Hazelcast, Infinispan, and others)
+- EhCache 2.x
+- Hazelcast
+- Infinispan
+- Couchbase
+- Redis
+- Caffeine
+- Simple
+
+
+
 
 ## [21. Quartz Scheduler]()
 
