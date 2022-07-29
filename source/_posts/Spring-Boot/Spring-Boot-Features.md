@@ -824,18 +824,53 @@ public class MathService {
 
 如果你没有定义 `CacheManager` 类型的 Bean 或者名为 `cacheResolver` 的 `CacheResolver`，Spring Boot 会尝试检测以下 provider（按照指示的顺序）：
 
-- Generic
-- JCache (JSR-107)(EhCache 3, Hazelcast, Infinispan, and others)
-- EhCache 2.x
-- Hazelcast
-- Infinispan
-- Couchbase
-- Redis
-- Caffeine
-- Simple
+1. Generic
+2. JCache (JSR-107)(EhCache 3, Hazelcast, Infinispan, and others)
+3. EhCache 2.x
+4. Hazelcast
+5. Infinispan
+6. Couchbase
+7. Redis
+8. Caffeine
+9. Simple
 
 
+#### [13.1.1. Generic](https://docs.spring.io/spring-boot/docs/2.3.12.RELEASE/reference/html/spring-boot-features.html#boot-features-caching-provider-generic)
 
+如果上下文定义了至少一个 `org.springframework.cache.Cache` Bean，则使用 Generic 缓存。将会创建一个 `CacheManager` 包裹所有该类型的 Bean。
+
+
+#### [13.1.2. JCache (JSR-107)](https://docs.spring.io/spring-boot/docs/2.3.12.RELEASE/reference/html/spring-boot-features.html#boot-features-caching-provider-jcache)
+
+通过类路径包含一个 `javax.cache.spi.CachingProvider` 会自动引导 JCache，并且 `spring-boot-starter-cache` "starter" 提供 `JCacheCacheManager`。可以获得各种符合条件的库，Spring 为 Ehcache 3，Hazelcast 和 Infinispan 提供依赖管理。也可以添加任何其他符合条件的库。
+
+有可能出现多个 provider，在这种情况下，provider 必须显式指定。即使 JSR-107 标准没有强制一种标准的方式定义配置文件的路径，Spring Boot 尽力容纳使用实现细节配置一个缓存，如下示例所示：
+
+```properties
+# Only necessary if more than one provider is present
+spring.cache.jcache.provider=com.acme.MyCachingProvider
+spring.cache.jcache.config=classpath:acme.xml
+```
+
+有两种方法可以自定义底层的 `javax.cache.cacheManager`:
+
+- 可以通过启动时设置 `spring.cache.cache-names` 属性创建缓存。如果定义了自定义的 `javax.cache.configuration.Configuration`，则将用于定制化缓存。
+- 使用 `CacheManager` 引用调用 `org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer` Bean，获得完整定制化。
+
+#### [13.1.3. EhCache 2.x](https://docs.spring.io/spring-boot/docs/2.3.12.RELEASE/reference/html/spring-boot-features.html#boot-features-caching-provider-ehcache2)
+
+如果在类路径的根路径下能够找到名为 `ehcache.xml` 的文件，那么 EhCache 2.x 会被使用。如果找到 EhCache 2.x，那么由 `spring-boot-starter-cache` "starter" 提供的 `EhCacheCacheManager` 将用于引导 cache manager。也可以提供可替代的配置文件，如下示例所示：
+
+```properties
+spring.cache.ehcache.config=classpath:config/another-config.xml
+```
+
+#### [13.1.4. Hazelcast](https://docs.spring.io/spring-boot/docs/2.3.12.RELEASE/reference/html/spring-boot-features.html#boot-features-caching-provider-hazelcast)
+
+Spring Boot 对 Hazelcast 有一般支持。如果 `HazelcastInstance` 已经自动配置了，那么它将自动包裹进 `CacheManager`。
+
+
+#### [13.1.5. Infinispan](https://docs.spring.io/spring-boot/docs/2.3.12.RELEASE/reference/html/spring-boot-features.html#boot-features-caching-provider-infinispan)
 
 ## [21. Quartz Scheduler]()
 

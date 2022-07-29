@@ -51,6 +51,10 @@ mimeMessageHelper.setText("您的验证码是: 9836, 如非本人操作请忽视
 javaMailSender.send(mimeMessage);
 ```
 
+## [7. Task Execution and Scheduling](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/integration.html#scheduling)
+
+Spring Framework 分别使用 `TaskExecutor` 和 `TaskScheduler` 接口进行
+
 &nbsp;
 ## [8. Cache Abstraction](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/integration.html#cache)
 ### [8.1. Understanding the Cache Abstraction](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/integration.html#cache-strategies)
@@ -77,9 +81,7 @@ SpringBoot `CacheAutoConfiguration` 中使用 `@Import` 导入了 `CacheConfigur
 底层使用 `concurrentMap` 实现，见 `SimpleCacheConfiguration`  注入 `ConcurrentMapCacheManager`。`ConcurrentMapCacheManager ` 属性 `dynamic` 可以配置 `cacheName` 是否可以动态生成，默认为 true。
 
 
-## [7. Task Execution and Scheduling](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/integration.html#scheduling)
 
-Spring Framework 分别使用 `TaskExecutor` 和 `TaskScheduler` 接口进行
 
 ### [8.2. Declarative Annotation-based Caching](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/integration.html#cache-annotations)
 Spring 缓存抽象提供了一组 Java 注解：
