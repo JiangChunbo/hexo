@@ -140,6 +140,13 @@ git branch [--color[=<when>] | --no-color] [--show-current]
 删除文件夹缓存。可以将已经被 git 跟踪，但从此不想被跟踪的文件进行缓存删除。-r 代表递归，用于文件夹。
 
 
+删除一个 maven 项目下所有 target 文件夹的跟踪：
+
+```bash
+git rm --cache -r --ignore-unmatch */target
+```
+
+
 ## Administration
 
 

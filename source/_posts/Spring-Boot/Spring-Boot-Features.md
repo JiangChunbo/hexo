@@ -872,6 +872,22 @@ Spring Boot 对 Hazelcast 有一般支持。如果 `HazelcastInstance` 已经自
 
 #### [13.1.5. Infinispan](https://docs.spring.io/spring-boot/docs/2.3.12.RELEASE/reference/html/spring-boot-features.html#boot-features-caching-provider-infinispan)
 
+
+#### [13.1.7. Redis](https://docs.spring.io/spring-boot/docs/2.3.12.RELEASE/reference/html/spring-boot-features.html#boot-features-caching-provider-redis)
+
+如果 Redis 可用且已配置，`RedisCacheManager` 就会自动配置。可以通过设置 `spring.cache.cache-names` 属性在启动时创建额外的缓存，以及通过使用 `spring.cache.redis.*` 属性配置缓存默认值。例如，以下配置创建了 `cache` 和 `cache2` 缓存，并具有 10 分钟的存活时间: 
+```properties
+spring.cache.cache-names=cache1,cache2
+spring.cache.redis.time-to-live=600000
+```
+
+> **Tips** 需要依赖 `spring-boot-starter-data-redis` 才能引入 `RedisCacheManager`
+
+
+> 默认情况下，添加了一个 key 前缀，这是为了，如果两个分开的缓存使用相同的 key，redis 没有重叠的 key，且无法返回无效值。我们强烈建议你在创建自己的 `RedisCacheManager` 时启用该设置。
+
+
+
 ## [21. Quartz Scheduler]()
 
 ## [26. Testing](https://docs.spring.io/spring-boot/docs/2.3.12.RELEASE/reference/html/spring-boot-features.html#boot-features-testing)

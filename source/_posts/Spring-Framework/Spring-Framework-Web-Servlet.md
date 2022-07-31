@@ -541,13 +541,28 @@ public class HelloController {
 
 ##### [Return Values](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-return-types)
 
+[WebFlux](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-ann-return-types)
+
+下表描述了支持的控制器方法返回值。所有返回值也支持响应式类型。
+
 |Controller method return value|Description|
-|-|-|
-|`@ResponseBody`|返回值通过 `HttpMessageConverter` 实现类进行转换，并写入响应中|
+|:-|:-|
+|`@ResponseBody`|返回值通过 `HttpMessageConverter` 实现类进行转换，并写入 response 中。见 [@ResponseBody](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-responsebody)|
 |`HttpEntity<B>`,`ResponseEntity<B>`|指定完整的响应（包括 HTTP 响应头以及响应体），将通过 `HttpMessageConverter` 实现类转换，并写入响应|
 |`HttpHeaders`|用于返回一个只有响应头，没有响应体的 response|
-|`String`|视图名...|
-|`View`||
+|`String`|一个视图名，使用 `ViewResolver` 实现类进行解析，并与隐式 model 一起使用 —— 通过命令对象和 `@ModelAttribute` 方法确定。handler 方法也可以通过声明一个 `Model` 参数编程式地丰富 model（见）[Explicit Registrations](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-requestmapping-registration)|
+|`View`|与隐式 model一起用于渲染的 `View` 实例 —— 通过命令对象和 `ModelAttribute` 方法确定。handler 方法也可以通过声明一个 `Model` 参数编程式地丰富 model（见）[Explicit Registrations](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-requestmapping-registration)|
+|`java.util.Map`, `org.springframework.ui.Model`|要添加到隐式 model 中的属性，其中视图名称通过一个 `RequestToViewNameTranslator` 隐式确定|
+|`@ModelAttribute`|要添加到 model 中的属性，其视图名通过 `RequestToViewNameTranslator` 隐式确定。<br>请注意，`ModelAttribute` 是可选的。在此表的末尾，请参见 "Any other return value"。|
+|`ModelAndView` object|要使用的视图和model属性，以及可选的响应状态。|
+|`void`|一个具有 `void` 返回类型的方法，如果它还具有一个 `ServletResponse`，一个 `OutputStream` 参数，或者一个 `@ResponseStatus` 注解，那么将认为该方法已经完全处理了该响应。如果控制器做出了正数的 `ETag` 或者 `lastModified` 时间戳检查，也是如此。<br>如果以上都不正确，则 `void` 返回值还可以表示 REST 控制器 "没有响应体"，或者对于 HTML 控制器来说表示选择默认的视图名。|
+|`DeferredResult<V>`|从任何线程中异步地产生前面返回值的任意 —— 例如，由于某些事件或回调。请参阅 [Asynchronous Requests](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-async) 和 [`DeferredResult`](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-async-deferredresult)|
+|`Callable<V>`|在 Spring MVC 管理的线程中异步产生上述任何返回值。请参阅 [Asynchronous Requests](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-async) 和 [`Callable`](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-async-callable)|
+|`ListenableFuture<V>`, `java.util.concurrent.CompletionStage<V>`, `java.util.concurrent.CompletableFuture<V>`|替代 `DeferredResult`，以方便起见（例如，当底层服务返回它们其中之一）|
+|`ResponseBodyEmitter`, `SseEmitter`|使用 `HttpMessageConverter` 实现类将对象的流异步地散发出去|
+|`StreamingResponseBody`|异步的写入 `OutputStream`|
+|反应性类型 —— Reactor, RxJava, 或者通过 `ReactiveAdapterRegistry` 的其他||
+|Any other return value||
 
 ##### [Type Conversion](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-typeconversion)
 如果 Controller 方法参数声明为 String 以外的其他类型，则某些带有 `@RequestParam`、`@RequestHeader`、`@PathVariable` 等注解的参数可能需要类型转换。
