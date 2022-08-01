@@ -1396,6 +1396,16 @@ Spring Security 工程为保护 web 应用免受恶意漏洞提供了支持。�
 ### [1.9. HTTP Caching](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/web.html#mvc-caching)
 
 
+### [1.10. View Technologies](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/web.html#mvc-view)
+
+在 Spring MVC 中使用视图技术是可拔插的，无论你决定使用 Thymeleaf，Groovy Markup Templates，JSP，或者其他技术，主要都是配置更改的问题。本章覆盖了与 Spring MVC 集成的视图技术。我们假设你已经熟悉 [View Resolution](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/web.html#mvc-viewresolver)。
+
+#### [1.10.1. Thymeleaf](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/web.html#mvc-view-thymeleaf)
+
+Thymeleaf 是一个现代的服务端 Java 模板引擎，强调可以通过双击在浏览器中预览的天然 HTML 模板，这对于独立工作于 UI 模板（例如，通过设计师）非常有帮助，无需运行在服务器。如果你想替换 JSP，则 Thymeleaf 提供了最广泛的功能集之一，以使这种过渡更加容易。Thymeleaf 开发和维护都比较活跃。有关更完整的介绍，请参见 [Thymeleaf](https://www.thymeleaf.org/) 项目主页。
+
+Thymeleaf 与 Spring MVC 集成由 Thymeleaf 项目管理。配置涉及了一些 Bean 声明，例如 `ServletContextTemplateResolver`，`SpringTemplateEngine`，以及 `ThymeleafViewResolver`。有关更多项目信息，请参见 [Thymeleaf+Spring](https://www.thymeleaf.org/documentation.html)。
+
 ### [1.11. MVC Config](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/web.html#mvc-config)
 
 MVC Java 配置和 MVC XML 命名空间配置提供了默认的配置，这适合大多数应用程序，如果你觉得不够，也提供了配置 API 供你自定义。
