@@ -43,16 +43,7 @@ tags:
 
 ## Branching and Merging
 ### [branch](https://git-scm.com/docs/git-branch)
-```bash
-git branch [--color[=<when>] | --no-color] [--show-current]
-	[-v [--abbrev=<n> | --no-abbrev]]
-	[--column[=<options>] | --no-column] [--sort=<key>]
-	[--merged [<commit>]] [--no-merged [<commit>]]
-	[--contains [<commit>]] [--no-contains [<commit>]]
-	[--points-at <object>] [--format=<format>]
-	[(-r | --remotes) | (-a | --all)]
-	[--list] [<pattern>…​]
-```
+
 
 可以简写为 `git branch`，列出本地存在的分支。当前分支会以绿色高亮并带 * 前缀。short style: `git branch -l`
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/e62d35e42b064b82a88638d37e972731.png)
@@ -79,6 +70,20 @@ git branch [--color[=<when>] | --no-color] [--show-current]
 
 ### `git branch --set-upstream-to=<远程主机>/<远程分支> <本地分支>`
 
+
+### reset
+
+#### 撤销 add
+
+```bash
+edit
+git add frotz.c filfre.c
+git reset 
+```
+1. 你愉快地在做某件事，发现这些文件的更改都完成了。你不想在 `git diff` 看到他们，因为你打算操作别的文件了，这些文件的更改可能会干扰你的注意力。
+2. 有人让你 pull，这些更改听起来值得合并
+3. 但是，你已经弄脏了 index（例如，你的 index 并不匹配 `HEAD` commit）。但你知道，你打算 pull 的操作并不会影响 `frotz.c` 或者 `filfre.c`，因此你 revert 对这两个文件索引的更改。在工作树中你的更改仍然存在。
+4. 然后，你可以 pull 且 merge，`frotz.c` 和 `filefre.c` 的更改仍然在工作树
 
 
 &nbsp;
@@ -129,6 +134,16 @@ git branch [--color[=<when>] | --no-color] [--show-current]
 ### `git checkout -B <branch>`
 情况一 如果 <branch> 不存在，则创建并切换。
 情况二 如果 <branch> 存在，则将 <branch> 重置为当前分支的状态，切换，工作树保留。（危险！！！）
+
+
+### 将 dev 分支的某个文件改动合并到 master
+
+```bash
+# 切换到 master
+git checkeout master
+# 进入手选模式
+git checkout --patch dev 要合并的文件路径
+```
 
 
 
