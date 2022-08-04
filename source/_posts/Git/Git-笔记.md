@@ -184,6 +184,26 @@ git clean -d -f
 使用贮藏。默认使用最近的一个，如果要指定最近的第二个，则 `git stash apply stash@{2}`
 
 
+
+### `config`
+
+修改 git log 显示格式
+
+
+```bash
+# 本地仓库格式修改
+git config log.date "format:%Y-%m-%d %H:%M:%S"
+git config log.date iso8601
+git config log.date short # 只显示日期
+# 修改全局样式
+git config --global log.date "format:%Y-%m-%d %H:%M:%S"
+git config --global log.date iso8601
+git config --global log.date short # 只显示日期
+```
+
+
+
+
 # 凭证存储
 [官方文档](https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%87%AD%E8%AF%81%E5%AD%98%E5%82%A8)
 
