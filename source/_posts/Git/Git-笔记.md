@@ -142,7 +142,7 @@ git reset
 # 切换到 master
 git checkeout master
 # 进入手选模式
-git checkout --patch dev 要合并的文件路径
+Git 要合并的文件路径
 ```
 
 
