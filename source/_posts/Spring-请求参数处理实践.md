@@ -102,3 +102,27 @@ public class ParamNameExtensionFilter extends HttpFilter {
     }
 }
 ```
+
+如果 Model 对象包含 `Collection`，需要定制 DataBinder:
+
+```java
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+        dataBinder.registerCustomEditor(List.class, "studentList", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                if (StringUtils.isEmpty(text)) {
+                    setValue(Collections.EMPTY_LIST);
+                } else {
+                    final ObjectMapper objectMapper = new ObjectMapper();
+                    try {
+                        setValue(objectMapper.readValue(text, new TypeReference<List<EvaluationVO.Student>>() {
+                        }));
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+    }
+```

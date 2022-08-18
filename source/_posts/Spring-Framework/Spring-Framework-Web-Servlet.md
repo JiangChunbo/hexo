@@ -530,7 +530,7 @@ public class HelloController {
 |`@RequestPart`|用于访问 `multipart/form-data` 请求中的 part|
 |`java.util.Map`, `org.springframework.ui.Model`, `org.springframework.ui.ModelMap`||
 |`RedirectAttributes`||
-|`@ModelAttribute`||
+|`@ModelAttribute`|用于访问模型中的现有属性（如果不存在则实例化），同时应用数据绑定和验证。请参阅 [`@ModelAttribute`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/web.html#mvc-ann-modelattrib-method-args) 以及 Model 和 [`DataBinder`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/web.html#mvc-ann-initbinder)|
 |`Errors`,`BindingResult`||
 |`SessionStatus` + class-level `@SessionAttributes`||
 |`UriComponentsBuilder`||
@@ -794,11 +794,14 @@ public Account handle() {
 
 #### [1.3.5. DataBinder](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/web.html#mvc-ann-initbinder)
 
-`@Controller` 和 `@ControllerAdvice` 类可以具有一些 `@InitBinder` 方法，用来初始化 `WebDataBinder` 实例，而这些方法又可以：
+`@Controller` 和 `@ControllerAdvice` 类可以具有 `@InitBinder` 方法，用来初始化 `WebDataBinder` 实例，而这些方法又可以：
 
-- 绑定请求参数（即，表单或者查询数据）到 model 对象
-- 将基于字符串的请求值（例如请求参数，路径变量，头，cookie等）转换为控制器方法参数的目标类型
+- 绑定请求参数（即，Form 或者 Query 数据）到 model 对象
+- 将基于字符串的请求值（例如请求参数，路径变量，请求头，cookie等）转换为控制器方法参数的目标类型
 - 当渲染 HTML 形式时，将 model 对象值以 `String` 值格式化
+
+
+> tips: 也就是说 WebDataBinder 不仅控制 Controller 入参，也控制出参。
 
 
 `@InitBinder` 方法可以注册特定于控制器的 `java.bean.PropertyEditor` 或者 Spring `Converter` 以及 `Formatter` 组件。此外，你也可以使用 MVC Config 在全局共享的 `FormattingConversionService` 注册 `Converter` 以及 `Formatter`。
