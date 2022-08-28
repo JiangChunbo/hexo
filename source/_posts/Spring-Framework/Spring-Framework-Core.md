@@ -2437,7 +2437,7 @@ Spring AOP 包括下面通知类型：
 
 Spring AOP 默认使用标准 JDK 动态代理作为 AOP 代理。这使得可以代理任何接口（或者一组接口）。
 
-Spring AOP 也可以使用 CGLIB 代理，者必须代理类而不是接口。默认地，如果业务对象没有实现接口，则使用 CGLIB。由于最好的实践是面向接口编程而不是类，业务类通常实现一个或多个业务接口。在你需要通知一个未声明在接口的方法，或者需要将代理对象作为固定类型传递给一个方法时，可以[强制使用 CGLIB](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-proxying)。
+Spring AOP 也可以使用 CGLIB 代理，这对于代理一些类而非接口是很有必要的。默认地，如果业务对象没有实现接口，则使用 CGLIB。由于最好的实践是面向接口编程而非面向类编程，业务类通常实现一个或多个业务接口。当你需要通知一个未声明在任何接口的方法时，或者需要将代理对象作为固定类型传递给一个方法时，可以[强制使用 CGLIB](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-proxying)。
 
 
 ### [5.4. @AspectJ support](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-ataspectj)
