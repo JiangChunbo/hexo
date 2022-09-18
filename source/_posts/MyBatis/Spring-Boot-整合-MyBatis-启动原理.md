@@ -11,6 +11,8 @@ tags:
 
 # Spring Boot 整合 MyBatis 启动原理
 
+需要知道，MyBatis 是通过 JDK 动态代理技术创建 Mapper 接口的代理类的。
+
 MyBatis 整合 Spring Boot 需要解决的是如何将自己创建的代理对象（`java.lang.reflect.Proxy`）交给 Spring 容器管理，这与将一个类（Class）交给 Spring 管理有所不同。
 
 > 将对象交给 Spring 容器管理，我们可以选择注入 Bean Definition，然后让 Spring 完成对象构造、配置、初始化等操作，然后放到 `singletonObjects` 单例池中，也可以选择直接放到单例池中，也就是不构造 Bean Definition，也不会存在于 `beanDefinitionMap`，这就是下面提及的 `SingletonBeanRegistry.registerSingleton` 方式
@@ -43,7 +45,7 @@ MyBatis 整合进 Spring 选择的是 `FactoryBean` 方式，通过向容器注�
 
 比较朴素的想法是，对于每个 `Mapper` 我们都为它定义一个 `FactoryBean`，但是这样工作量太大，MyBatis 通过动态 Class 实现了只需要一个 `MapperFactoryBean` 就可以构造出不同的 `Mapper` 实例
 
-> 底层对应 `MapperFactoryBean` 的属性 `mapperInterface`，表示不同的 `Mapper` 接口的 `Class` 对象
+> 底层对应 `MapperFactoryBean` 的类属性 `mapperInterface`，表示不同的 `Mapper` 接口的 `Class` 对象
 
 在使用 Spring 整合 MyBatis 的时候，通常会使用如下配置，这也是官网 [Getting Started](http://mybatis.org/spring/getting-started.html) 提供的案例：
 
@@ -341,3 +343,78 @@ private void processBeanDefinitions(Set<BeanDefinitionHolder> beanDefinitions) {
     }
 }
 ```
+
+
+### AutoConfiguredMapperScannerRegistrar
+
+
+如果没有发现 `MapperScannerConfigurer` 就会导入 `AutoConfiguredMapperScannerRegistrar`：
+
+```java
+@org.springframework.context.annotation.Configuration
+@Import(AutoConfiguredMapperScannerRegistrar.class)
+@ConditionalOnMissingBean({ MapperFactoryBean.class, MapperScannerConfigurer.class })
+public static class MapperScannerRegistrarNotFoundConfiguration implements InitializingBean {
+
+    @Override
+    public void afterPropertiesSet() {
+        logger.debug(
+            "Not found configuration for registering mapper bean using @MapperScan, MapperFactoryBean and MapperScannerConfigurer.");
+    }
+
+}
+```
+
+`AutoConfiguredMapperScannerRegistrar` 的定义如下：
+
+```java
+public static class AutoConfiguredMapperScannerRegistrar implements BeanFactoryAware, ImportBeanDefinitionRegistrar {
+
+    private BeanFactory beanFactory;
+
+    @Override
+    public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
+
+        if (!AutoConfigurationPackages.has(this.beanFactory)) {
+        logger.debug("Could not determine auto-configuration package, automatic mapper scanning disabled.");
+        return;
+        }
+
+        logger.debug("Searching for mappers annotated with @Mapper");
+
+        List<String> packages = AutoConfigurationPackages.get(this.beanFactory);
+        if (logger.isDebugEnabled()) {
+        packages.forEach(pkg -> logger.debug("Using auto-configuration base package '{}'", pkg));
+        }
+
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(MapperScannerConfigurer.class);
+        builder.addPropertyValue("processPropertyPlaceHolders", true);
+        builder.addPropertyValue("annotationClass", Mapper.class);
+        builder.addPropertyValue("basePackage", StringUtils.collectionToCommaDelimitedString(packages));
+        BeanWrapper beanWrapper = new BeanWrapperImpl(MapperScannerConfigurer.class);
+        Set<String> propertyNames = Stream.of(beanWrapper.getPropertyDescriptors()).map(PropertyDescriptor::getName)
+            .collect(Collectors.toSet());
+        if (propertyNames.contains("lazyInitialization")) {
+        // Need to mybatis-spring 2.0.2+
+        builder.addPropertyValue("lazyInitialization", "${mybatis.lazy-initialization:false}");
+        }
+        if (propertyNames.contains("defaultScope")) {
+        // Need to mybatis-spring 2.0.6+
+        builder.addPropertyValue("defaultScope", "${mybatis.mapper-default-scope:}");
+        }
+        registry.registerBeanDefinition(MapperScannerConfigurer.class.getName(), builder.getBeanDefinition());
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
+    }`
+
+}
+```
+
+分析：
+
+实现了 `BeanFactoryAware` 接口，因此该 Bean 在构造的过程中会自动调用 `setBeanFactory` 方法，使得该 Bean 获得 beanFactory 的引用
+
+实现了 `ImportBeanDefinitionRegistrar` 接口，

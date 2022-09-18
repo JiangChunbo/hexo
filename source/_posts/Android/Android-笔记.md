@@ -2,9 +2,9 @@
 title: Android 笔记
 date: 2022-07-18 22:56:44
 categories:
-- Android 笔记
+- Android
 tags:
-- Android 笔记
+- Android
 ---
 
 # 清单文件

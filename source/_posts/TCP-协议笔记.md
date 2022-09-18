@@ -86,8 +86,35 @@ Server 检查 ack 是否为 y + 1，ACK 是否为 1，如果正确，则建立�
 客户端：短时间内大量的短链接，会大量消耗 Client 机器的接口，端口只有 65535 个，端口被耗尽，无法发起新的连接。
 
 关于 Windows 的端口使用问题：
-参数 [MaxUserPort](https://docs.microsoft.com/zh-cn/previous-versions/office/exchange-server-analyzer/bb397382(v=exchg.80))
-[TcpTimedWaitDelay](https://docs.microsoft.com/zh-cn/previous-versions/office/exchange-server-analyzer/bb397379(v=exchg.80)?redirectedfrom=MSDN)
+
+Windows 系统供用户使用的端口是具有一定配置的，可以通过以下命令查看：
+
+```bash
+C:\Users\JiangChunbo>netsh int ipv4 show dynamicport tcp
+
+协议 tcp 动态端口范围
+---------------------------------
+启动端口        : 49152
+端口数          : 16384
+```
+
+通常具有一个启动端口（start）表示可用的起始端口号，以及端口数（num）表示从起始端口号开始可用的端口数。默认是从 49152 - 65535。
+
+参考 [MaxUserPort](https://docs.microsoft.com/zh-cn/previous-versions/office/exchange-server-analyzer/bb397382(v=exchg.80))、[TcpTimedWaitDelay](https://docs.microsoft.com/zh-cn/previous-versions/office/exchange-server-analyzer/bb397379(v=exchg.80)?redirectedfrom=MSDN)、[优化网络性能的可修改设置](https://docs.microsoft.com/zh-cn/biztalk/technical-guides/settings-that-can-be-modified-to-improve-network-performance)
+
+
+测试 Windows 端口耗尽，例如使用如下 PHP 脚本将本机器的端口全部耗尽：
+
+```php
+while (true) {
+    $conn = mysqli_connect("******", "******", "******");
+    mysqli_close($conn);
+}
+```
+
+这时候，尝试申请数据库连接的时候会产生如下警告：
+
+<img src="https://img-blog.csdnimg.cn/277e8a9905c3452c9a6ba9f5329ccef1.png">
 
 
 # TCP 协议端口连接状态
