@@ -41,11 +41,31 @@ ThreadPoolExecutor 继承了 AbstractExecutorService，成员变量 ctl 是一�
 
 
 
+## newFixedThreadPool
 
-创建一个核心线程个数和最大线程个数都为 nThreads 的线程池：
+`newFixedThreadPool` 创建一个核心线程个数和最大线程个数都为 nThreads 的线程池：
 
 ```java
+public static ExecutorService newFixedThreadPool(int nThreads) {
+        return new ThreadPoolExecutor(nThreads, nThreads,
+                                      0L, TimeUnit.MILLISECONDS,
+                                      new LinkedBlockingQueue<Runnable>());
+ }
+ //使用自定义线程创建工厂
+ public static ExecutorService newFixedThreadPool(int nThreads, ThreadFactory threadFactory) {
+        return new ThreadPoolExecutor(nThreads, nThreads,
+                                      0L, TimeUnit.MILLISECONDS,
+                                      new LinkedBlockingQueue<Runnable>(),
+                                      threadFactory);
+ }
 ```
+
+keepAliveTime 为 0，说明只要线程个数比核心线程个数多并且当前空闲则回收。
+
+这里传递了 `new LinkedBlockingQueue<Runnable>()` 作为阻塞队列，默认大小为 `Integer.MAX_VALUE`，因此可以认为是一个无界队列。
+
+
+## newSingleThreadExecutor
 
 创建一个核心线程数和最大线程数都为 1 的线程池：
 
@@ -53,6 +73,15 @@ ThreadPoolExecutor 继承了 AbstractExecutorService，成员变量 ctl 是一�
 ExecutorService executor = Executors.newSingleThreadExecutor();
 ```
 
+
+有界队列禁止设置长度为 0，至少是 1，因此似乎没有办法做到仅固定线程活跃，其他任务拒绝：
+
+```java
+// 错误
+ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
+            THREAD_POOL_SIZE, THREAD_POOL_SIZE, 0L, TimeUnit.SECONDS,
+            new ArrayBlockingQueue<>(0), new ThreadPoolExecutor.AbortPolicy());
+```
 
 
 
