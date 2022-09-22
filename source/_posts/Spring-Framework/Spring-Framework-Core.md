@@ -2391,7 +2391,9 @@ public class MyService {
 
 ## [4. Spring Expression Language (SpEL)](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#expressions)
 
+Spring 表达式语言（简称 SpEL）是一种功能强大的表达式语言，支持在运行时查询和操作对象图。该语言的语法类似于 Unified EL，但提供了额外的特性、最显著的方法调用和基本字符串模板功能。
 
+虽然还有其他几种可用的 Java 表达式语言—— OGNL，MVEL，以及 JBoss EL，但仅举几个例子，创建 Spring 表达式语言是为了向 Spring 社区提供一种受良好支持的表达式语言，该语言可以在 Spring 产品组合中的所有产品中使用。它的语言特性是由 Spring 投资组合中的项目需求驱动的，包括在 Spring Tools For Eclipse 中队代码完成支持的工具需求。也就是说，SpEL 基于一种与技术无关的 API，它允许在需要时集成其他表达式语言实现。
 
 ## [5. Aspect Oriented Programming with Spring](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop)
 面向切面编程（AOP）提供了另一种关于编程结构的思考方式，以对面向对象编程（OOP）进行补充。OOP 中关键的模块化单元是类，而 AOP 中，模块化单元是切面。切面使横跨多个类和对象切入的关注点（例如事务管理）模块化成为可能。（此类关注点通常在 AOP 的文献中称为“横切”关注点。）

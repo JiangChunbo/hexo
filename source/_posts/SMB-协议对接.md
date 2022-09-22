@@ -29,9 +29,13 @@ maven
 
 SMB 关于 Windows 的共享文件夹
 
-如果开启了密码保护需要提供**用户账户**和**密码**
+如果开启了**密码保护**需要提供**账户**和**密码**
 
 计算机处于睡眠状态时无法访问共享目录
+
+如果为 EveryOne 开启了访问权限，即使不存在的**账户**，也可以访问，此时密码应该被忽略
+
+如果**账户**是系统存在的，则会进行**密码**认证，失败则不通过。
 
 
 ## 获得一个 SMBClient
@@ -114,7 +118,7 @@ try (SMBClient client = new SMBClient();
 
 ## `com.hierynomus.smbj.share.File`
 
-- 打开一个文件
+- 打开一个文件（读）
 
 ```java
 File smbFileRead = dirShare.openFile(
@@ -132,15 +136,30 @@ SMB2CreateDisposition: 如果传递 `FILE_OPEN`，那么文件找不到的情况
 
 - 远程拷贝
 
+就是直接在远程机器上将一个文件拷贝到另一个文件
+
 
 ```java
-shareFile.remoteCopyTo(backupShareFile);
+// 确保拷贝到的文件夹存在
+this.ensureDirectoryExists(diskShare, dir);
+com.hierynomus.smbj.share.File backupShareFile = diskShare.openFile(
+        "copy-directory\\" + filename,
+        EnumSet.of(AccessMask.GENERIC_ALL), // Set<AccessMask>
+        null, // Set<FileAttributes>
+        SMB2ShareAccess.ALL, // Set<SMB2ShareAccess>
+        SMB2CreateDisposition.FILE_CREATE, // SMB2CreateDisposition
+        null);
+smbFile.remoteCopyTo(backupShareFile);
 ```
 
 
 - 如何判断一个 `File` 是否是文件夹
 
 ```java
+// FileIdBothDirectoryInformation
+boolean isDirectory = (f.getFileAttributes() & 0x10) == 0x10;
+
+// File
 boolean directory = shareFile.getFileInformation().getStandardInformation().isDirectory();
 ```
 
