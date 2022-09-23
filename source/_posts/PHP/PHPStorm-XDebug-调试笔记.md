@@ -90,4 +90,6 @@ xdebug.remote_port = 9696
 
 之后就可以调试了，注意开启📞按钮，PHPStorm 才可以监听
 
+> 调试接口的时候必须添加 XDEBUG_SESSION_START 参数才可以，参数值是什么无所谓
+
 <img src="https://img-blog.csdnimg.cn/ff0cb7f2386b4999a79926802ff67b09.png">
