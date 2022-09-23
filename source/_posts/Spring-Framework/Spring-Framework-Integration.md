@@ -131,6 +131,34 @@ public class TaskExecutorExample {
 除了 `TaskExecutor` 抽象外，
 
 
+### [7.3. Annotation Support for Scheduling and Asynchronous Execution](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/integration.html#scheduling-annotation-support)
+
+
+#### [7.3.2. The `@Scheduled` annotation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/integration.html#scheduling-annotation-support-scheduled)
+
+你可以将 `@Scheduled` 注解和触发器元数据一起添加到方法中。例如，下面的方法每 5 秒钟调用一次，具有固定的延迟，这意味着周期是从前面调用的完成时间计算出来的: 
+
+```java
+@Scheduled(fixedDelay=5000)
+public void doSomething() {
+    // something that should run periodically
+}
+```
+
+> **tips** `fixedDelay` 属性比较好理解，如果任务执行时间为 3 秒，那么到第 8 秒才会执行第二个任务。
+
+
+如果需要固定速率的执行，可以更改注解中指定的属性名。下面的方法每 5 秒钟调用一次（在每次调用的连续开始时间之间测量）:
+
+```java
+@Scheduled(fixedRate=5000)
+public void doSomething() {
+    // something that should run periodically
+}
+```
+
+> **tips** `fixedRate` 意味着你的任务以固定的速率启动，但是可能会阻塞。当你任务执行时间较短，低于 fixedRate 时，任务按照固定的速率正常执行；当你的任务执行时间较长，大于 fixedRate 时，下一个任务由于前面的任务没有执行完毕会进入阻塞状态，在前一个任务执行完毕之后立即执行。
+
 
 ## [8. Cache Abstraction](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/integration.html#cache)
 ### [8.1. Understanding the Cache Abstraction](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/integration.html#cache-strategies)
