@@ -162,3 +162,11 @@ tags:
 ```
 
 在 table 节点添加属性 `delimitAllColumns="true"`
+
+
+
+- Mapper XML 文件覆盖
+
+```xml
+<plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
+```
