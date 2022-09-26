@@ -53,26 +53,6 @@ sudo docker run \
 ```
 
 
-```bash
-docker run --rm -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitlab-runner register \
-    --non-interactive \
-    --executor "docker" \
-    --docker-image alpine:latest \
-    --url "http://192.168.199.138" \
-    --registration-token "BNAb3ek6et6GGtWzYG-z" \
-    --description "first-register-runner" \
-    --tag-list "test-cicd,dockercicd" \
-    --run-untagged="true" \
-    --locked="false" \
-    --access-level="not_protected"
-```
-
-
-如果出现主机名无法解析的情况，编辑 `/etc/gitlab-runner/config.toml`，在 `[runners]` 节点下面的 `[runners.docker]` 增加配置:
-
-```
-extra_hosts = ["主机名:IP"]
-```
 
 
 ## Gitlab 修改 root 初始密码且忘记密码

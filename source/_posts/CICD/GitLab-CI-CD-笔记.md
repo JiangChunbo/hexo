@@ -9,6 +9,33 @@ tags:
 https://docs.gitlab.com/ee/ci/yaml/#keywords
 
 
+# 安装
+
+## GitLab Runner
+
+
+```bash
+docker run --rm -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitlab-runner register \
+    --non-interactive \
+    --executor "docker" \
+    --docker-image alpine:latest \
+    --url "http://192.168.199.138" \
+    --registration-token "BNAb3ek6et6GGtWzYG-z" \
+    --description "first-register-runner" \
+    --tag-list "test-cicd,dockercicd" \
+    --run-untagged="true" \
+    --locked="false" \
+    --access-level="not_protected"
+```
+
+
+如果出现主机名无法解析的情况，编辑 `/etc/gitlab-runner/config.toml`，在 `[runners]` 节点下面的 `[runners.docker]` 增加配置:
+
+```
+extra_hosts = ["主机名:IP"]
+```
+
+
 
 ## Keywords
 
@@ -56,6 +83,12 @@ https://docs.gitlab.com/ee/ci/yaml/#keywords
 
 
 
+### <a id="cache" href="https://docs.gitlab.com/ee/ci/yaml/#cache">cache</a>
+
+使用 `cache` 指定要在 job 之间缓存的文件和目录的列表。只能使用本地工作副本中的路径.
+
+
+#### cache:paths
 
 ### <a id="image" href="https://docs.gitlab.com/ee/ci/yaml/#image">image</a>
 
@@ -67,7 +100,11 @@ https://docs.gitlab.com/ee/ci/yaml/#keywords
 ### <span id="retry">retry</span>
 
 
-### <span id="tags">tags</span>
+### <span id="tags" href="https://docs.gitlab.com/ee/ci/yaml/#tags">tags</span>
+
+使用 `tags` 可以从项目可用的所有 runner 中选择特定的运行程序
+
+当你注册运行 runner 时，你可以指定 runner 的 `tags`，例如 `ruby`，`postgres`，或者 `development`。要选择并运行一个 job，runner 必须为作业中列出的每个标记分配一个 runner。
 
 
 ### <span id="when" href="https://docs.gitlab.com/ee/ci/yaml/#when">when</span>
