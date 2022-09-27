@@ -67,7 +67,8 @@ xdebug.show_local_vars=0
 
 在 `phpForApache.ini` 文件配置端口号 `xdebug.remote_port`:
 
-> - 注意别改错了，不是改 `php.ini`;
+> - 注意别改错了，不是改 `php.ini`
+> - 注意不要选错 php 版本了，需要修改 wampserver 使用的版本
 > - 这个端口随便配置，只要没有被占用即可
 
 ```ini
