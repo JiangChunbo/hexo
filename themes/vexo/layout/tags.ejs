@@ -4,6 +4,7 @@
 </div>
 <main class="app-body">
   <div id="tag-cloud">
+    <% site.tags.data.sort((a, b) => a.name.localeCompare(b.name)) %>
     <% site.tags.map(function(tag, index) { %>
       <a class="tag<%= Math.round(Math.random()*3) %>" data-name="tag-<%= tag.name %>"><%= tag.name %></a>
     <% }) %>
