@@ -15,7 +15,13 @@ fileAttributes，包含文件属性掩码
 https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-fscc/ca28ec38-f155-4768-81d6-4bfeb8586fc9
 
 
-# 使用
+# 命令行使用
+
+```bash
+apt install smbclient
+```
+
+# Java 使用
 
 maven
 
