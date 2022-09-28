@@ -34,6 +34,13 @@
             <% } %>
           </li>
         <% } %>
+        <% if (theme.local_search.enable == true) { %>
+          <li class="menu-item">
+            <a role="button" class="popup-trigger">
+                <i class="fa fa-search fa-fw"></i>
+            </a>
+          </li>
+        <% } %>
       </ul>
     </div>
     <% if (theme.local_search.enable == true) { %>
