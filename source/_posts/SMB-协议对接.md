@@ -17,8 +17,39 @@ https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-fscc/ca28ec38-f
 
 # 命令行使用
 
+- 安装 smbclient 工具s
+
 ```bash
-apt install smbclient
+apt -y --force-yes install smbclient
+```
+
+- 列出所有的共享名称
+
+```bash
+smbclient -L //<HOSTNAME> -U <USERNAME>%<PASSWORD>
+```
+
+- 进入特定共享名
+
+
+
+# smbclient 命令
+
+- 查看当前文件夹
+
+```bash
+smb: \> ls
+```
+
+- 创建一个目录
+
+```bash
+smb: \> mkdir directory-name
+```
+
+- 进入目录
+```bash
+smb: \> cd DMS_Input_DistAndShop_CIB
 ```
 
 # Java 使用
