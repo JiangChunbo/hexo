@@ -17,8 +17,29 @@ https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-fscc/ca28ec38-f
 
 # 命令行使用
 
+## 安装客户端
+
 ```bash
 apt install smbclient
+```
+
+```bash
+yum install samba-client
+```
+
+## 其他
+
+
+默认共享是系统安装完毕后就自动开启的共享,也叫管理共享,常被管理员用于远程管理计算机。在 Windows 2000/XP 及更高级的版本中,默认开启的共享有“c$”、“d$”等所有的逻辑盘以及“admin$”、“ipc$”,这些共享都有“$”标志,意为隐含的。
+
+假设你的计算机名为 CannedBread，在运行对话框输入: `\\CannedBread\C$` 即可访问
+
+## 命令
+
+连接目标 Windows 服务器共享目录（Windows安装完毕会开启驱动器的隐藏共享，需要管理员权限，访问路径是：盘符$)
+
+```bash
+smbclient //192.168.199.196/share -U Administrators/JiangChunbo
 ```
 
 # Java 使用

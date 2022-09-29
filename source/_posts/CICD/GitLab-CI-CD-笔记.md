@@ -19,12 +19,12 @@ docker run --rm -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitlab-ru
     --non-interactive \
     --executor "docker" \
     --docker-image alpine:latest \
-    --url "http://192.168.199.138" \
-    --registration-token "BNAb3ek6et6GGtWzYG-z" \
+    --url "http://192.168.59.59" \
+    --registration-token "FNc7eS247zHfjLgugiw4" \
     --description "first-register-runner" \
     --tag-list "test-cicd,dockercicd" \
     --run-untagged="true" \
-    --locked="false" \
+    --locked="true" \
     --access-level="not_protected"
 ```
 
@@ -34,6 +34,21 @@ docker run --rm -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitlab-ru
 ```
 extra_hosts = ["主机名:IP"]
 ```
+
+
+## Runner Token 类型
+
+- shared
+
+Admin > Overview > Runners
+
+- Group
+
+Groups > Settins > CI/CD
+
+- project
+
+项目 > Settins > CI/CD
 
 
 
