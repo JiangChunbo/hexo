@@ -39,3 +39,30 @@ big.setScale(1, BigDecimal.ROUND_HALF_DOWN);
 // 截断多余小数位，如: 2.678 得到 2.6
 big.setScale(1, BigDecimal.ROUND_DOWN);
 ```
+
+
+## 判断符号
+
+
+如果返回 -1，表示负数；
+如果返回 0，表示 0；
+如果返回 1，表示正数；
+
+```java
+big.signum();
+```
+
+
+## 相反数 `negate()`
+
+```java
+new BigDecimal(10).negate();
+```
+
+## 输出字符串
+
+不使用科学计数法输出
+
+```java
+bigDecimal.toPlainString();
+```
