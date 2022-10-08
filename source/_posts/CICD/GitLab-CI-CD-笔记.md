@@ -2,6 +2,7 @@
 title: GitLab CI/CD 笔记
 date: 2022-09-25 22:53:25
 tags:
+- CI/CD
 ---
 
 # 参考
@@ -130,6 +131,14 @@ job:
 
 如果作业超时或被取消，则不执行 `after_script` 命令。
 
+
+### <a id="allow_failure" href="https://docs.gitlab.com/ee/ci/yaml/#allow_failure">allow_failure</a>
+
+使用 `allow_failure` 确定作业失败时管道是否应该继续运行。
+
+- 若要让管道继续运行后续作业，请使用 `allow_failure: true`。
+- 若要停止管道运行后续作业，请使用 `allow_failure: false`。
+
 ### <a id="before_script" href="https://docs.gitlab.com/ee/ci/yaml/#before_script">before_script</a>
 
 使用 `before_script` 定义一个命令组，这个命令组应该在每个 job 的 `script` 命令之前运行，但是在 artifacts 恢复之后。
@@ -173,9 +182,9 @@ job:
 
 ### <a id="tags" href="https://docs.gitlab.com/ee/ci/yaml/#tags">tags</a>
 
-使用 `tags` 可以从项目可用的所有 runner 中选择特定的运行程序
+使用 `tags` 可以从项目可用的所有 Runner 中选择特定的运行程序
 
-当你注册运行 runner 时，你可以指定 runner 的 `tags`，例如 `ruby`，`postgres`，或者 `development`。要选择并运行一个 job，runner 必须为作业中列出的每个标记分配一个 runner。
+当你注册运行 Runner 时，你可以指定 Runner 的 `tags`，例如 `ruby`，`postgres`，或者 `development`。要选择并运行一个 job，Runner 必须为作业中列出的每个标记分配一个 runner。
 
 **`tags` 的例子**:
 

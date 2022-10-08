@@ -1,5 +1,5 @@
 ---
-title: Spring Framework Core
+title: Spring Framework Core 翻译
 date: 2022-05-09 21:35:20
 categories:
 - 框架
@@ -7,10 +7,10 @@ tags:
 - Spring Framework
 ---
 # [Core](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#spring-core)
-## [1. The IoC Container](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans)
+# [1. The IoC Container](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans)
 这一章主要讲述 Spring 的 IoC 容器，也就是 Inversion of Control container。
 
-### [1.1. Introduction to the Spring IoC Container and Beans](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-introduction)
+## [1.1. Introduction to the Spring IoC Container and Beans](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-introduction)
 本章涵盖了控制反转（IoC）原理的 Spring Framework 实现。IoC 也被称为依赖注入（DI）。依赖注入是这样一个过程，对象定义它们的依赖仅通过构造器参数，工厂方法参数，在对象实例构造完毕或者从工厂方法返回之后设置属性。然后，容器在创建 bean 时注入这些依赖。这个过程通过使用类的直接构造或者例如服务定位器模式的机制，从根本上反转（因此得名控制反转）了 bean 本身控制其依赖的初始化或者定位。
 
 > **作者的话** IoC 是 Inversion of Control 的缩写；DI 是 Dependency Injection 的缩写
@@ -28,7 +28,7 @@ tags:
 
 在 Spring 中，构成应用骨架并由 Spring IoC 容器管理的对象称之为 bean。bean 是由 Spring IoC 容器实例化，组装和管理的对象。一个 bean 只是你应用程序中的众多对象之一。bean 以及其中的依赖项反映在供容器使用的配置元数据中。
 
-### [1.2. Container Overview](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-basics)
+## [1.2. Container Overview](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-basics)
 `org.springframework.context.ApplicationContext` 代表 Spring IoC 容器，负责实例化、配置、组装 bean。通过读取配置元数据，容器获取那些需要实例化、配置、组装的对象的说明。配置元数据表现为 XML，Java 注解，Java 代码。它让你表达出组成你应用的对象，以及这些对象之间丰富的相互依赖性。
 
 Spring 提供了一些 `ApplicationContext` 接口的实现。在独立应用程序中，通常创建 `ClassPathXmlApplicationContext` 或者 `FileSystemXmlApplicationContext` 实例。虽然 XML 一直是一种定义元数据的传统格式，但可以通过提供少量 XML 配置来声明启用其他元数据格式（Java 注解，Java 代码）的支持。它使你可以表达构成你应用程序的对象，以及这些对象之间丰富的相互依赖关系。
@@ -39,7 +39,7 @@ Spring 提供了 `ApplicationContext	` 接口的几种实现。在独立应用�
 
 下图展示了 Spring 工作方式的高级视图。你的应用程序类与配置元数据结合起来，以便于在 `ApplicationContext` 创建并初始化之后，你可以拥有一个完全配置化的可执行的系统或应用程序。
 ![请添加图片描述](https://img-blog.csdnimg.cn/054c1b5f95d04370b549bd566f4891c7.png)
-#### [1.2.1. Configuration Metadata](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-metadata)
+### [1.2.1. Configuration Metadata](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-metadata)
 如前面图所示，Spring IoC 容器消耗某种形式的配置元数据。配置元数据表现出你如何告诉 Spring 容器去实例化，配置，组装你应用程序中的对象。
 
 > - 组装可以认为是一种依赖注入。
@@ -82,14 +82,14 @@ Spring 配置包含至少一个，且通常不止一个容器必须管理的 bea
 `class` 属性定义了 bean 的类型，并且使用完全限定类名。
 
 
-#### [1.2.2. Instantiating a Container](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-instantiation)
+### [1.2.2. Instantiating a Container](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-instantiation)
 提供给 `ApplicationContext` 构造器的一个或多个位置路径是资源字符串，它使得容器能够从各种外部资源加载配置元数据，例如本地文件系统，Java `CLASSPATH` 等。
 
 ```java
 ApplicationContext context = new ClassPathXmlApplicationContext("services.xml", "daos.xml");
 ```
 
-##### [Composing XML-based Configuration Metadata](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-xml-import)
+#### [Composing XML-based Configuration Metadata](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-xml-import)
 让 bean 定义涵盖多个 XML 文件可能很有用。通常，每个单独的 XML 配置文件代表你的架构中的一个逻辑层或者模块。
 
 你可以使用 `ApplicationContext` 构造器从所有这些 XML 片段中加载 bean 定义。该构造器接收多个 `Resource` 路径，如前一节所示。另外，请使用一个或多个 `<import/>` 元素从另一个（些）文件中加载 bean 定义。以下示例显示了如何做：
@@ -112,11 +112,11 @@ ApplicationContext context = new ClassPathXmlApplicationContext("services.xml", 
 
 命名空间本身提供了 import 指令功能。除了普通 bean 定义之外，还可以在 Spring 提供的 XML 命名空间的选择中获得更多配置功能 —— 例如，`context` 和 `util` 命名空间。
 
-##### [The Groovy Bean Definition DSL](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#groovy-bean-definition-dsl)
+#### [The Groovy Bean Definition DSL](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#groovy-bean-definition-dsl)
 
 先省略
 
-#### [1.2.3. Using the Container](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-client)
+### [1.2.3. Using the Container](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-client)
 `ApplicationContext` 是一个高级工厂接口，能够维护各种各样 bean 及其依赖的注册表 。通过使用 `T getBean(String name, Class<T> requiredType)` 方法，你可以检索 你的 bean 实例。
 
 `ApplicationContext` 使你可以读取 bean 定义并访问它们，如以下示例所示：
@@ -145,7 +145,7 @@ context.refresh();
 然后，你可以使用 `getBean` 来检索 bean 实例。`ApplicationContext` 接口还有一些其他的方法用于检索 bean，但是理想情况下，你的应用程序代码绝不应该使用它们。实际上，你的应用程序代码一点都不应该调用 `getBean()` 方法，因此一点都不依赖于 Spring API。例如，Spring 和 Web 框架的集成，通过元数据声明对 bean 的依赖，进而通过 Web 框架来获取 bean。
 
 
-### [1.3. Bean Overview](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-definition)
+## [1.3. Bean Overview](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-definition)
 Spring IoC 容器管理一个或多个 bean。这些 bean 是用你提供给容器的配置元数据所创建的（例如，以 XML `<bean/>` 定义形式）。
 
 在容器之中，这些 Bean Definition 都会以 `BeanDefinition` 对象形式表现，其中包含（除其他信息）以下元数据：
@@ -169,7 +169,7 @@ Spring IoC 容器管理一个或多个 bean。这些 bean 是用你提供给容�
 |Initialization method|Initialization Callbacks|
 |Destruction method|Destruction Callbacks|
 
-#### [1.3.1. Naming Beans](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-beanname)
+### [1.3.1. Naming Beans](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-beanname)
 每个 Bean 可以有一个或多个标识符。这些标识符必须在托管 Bean 的容器中是唯一的。通常，一个 Bean 只有一个标识符。但是，如果需要多个，其余视为别名。
 
 在基于 XML 的配置元数据，你可以使用 `id` 属性，`name` 属性，或者两个一起来指定 bean 的标识符。`id` 属性允许你指定一个标识。按照约定，这些名字是字母或数字组合，例如：myBean, someService 等。
@@ -185,17 +185,17 @@ Spring IoC 容器管理一个或多个 bean。这些 bean 是用你提供给容�
 > 该约定是，当命名 Bean 时，使用用于实例字段名称的标准 Java 约定。即，Bean 的名字以小写字母开头，并从那里开始以驼峰格式。此类名称的示例包括 `accountManager`，`accountService`，`userDao`，`loginController` 等。
 
 
-##### [Aliasing a Bean outside the Bean Definition](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-beanname-alias)
+#### [Aliasing a Bean outside the Bean Definition](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-beanname-alias)
 在一个 bean 定义本身中，你可以通过 `id` 属性指定最多 1 个名称，以及在 `name` 属性中任意数量的其他名称，为 bean 提供不止一个名称。这些名称可以等效的 bean 别名，并且对于某些场景很有用，例如，让应用程序中的每个组件通过使用特定于该组件本身的 bean name 来引用通用的依赖。
 
 > 如果你使用 Java 配置，可以使用 `@Bean` 注解提供别名。
 
-#### [1.3.2. Instantiating Beans](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-class)
+### [1.3.2. Instantiating Beans](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-class)
 Bean Definition 本质上可以认为是创建一个或多个对象的配方。当需要时，容器会查找有名 bean 的配方，并使用该 Bean Definition 封装的配置元数据来创建（或者是获取）一个实际的对象。
 
 如果你使用的是基于 XML 配置元数据，指定 `<bean/>` 元素的 `class` 属性作为对象的类型。`class` 属性（`BeanDefinition` 实例中的 `Class` 属性）通常是必需的。
 
-##### [Instantiation with a Constructor](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-class-ctor)
+#### [Instantiation with a Constructor](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-class-ctor)
 当你通过构造器方式创建 bean 时，所有一般的类都可以为 Spring 所用，并与 Spring 兼容。也就是说，开发的类无需实现特定的接口或者以特定方式进行编码。简单地指定 bean 的 class 就足够了。但是，根据你用于该特定 bean 的 IoC 类型，你可能需要一个默认（空）构造器。
 
 Spring IoC 容器几乎可以管理你想要管理的任何类。它不仅仅局限于管理真正的 Java Bean。大多数 Spring 用户更愿意在容器中使用实际的 Java Bean，具有一个默认（无参）构造器，以及适当的属性 Setter 和 Getter。你也可以在容器中有更多特别的非 bean 风格的类。例如，如果你需要使用绝对不符合 Java Bean 规范的旧连接池，Spring 也可以管理它。
@@ -210,7 +210,7 @@ Spring IoC 容器几乎可以管理你想要管理的任何类。它不仅仅局
 
 有关向构造函数提供参数的机制的详细信息（如果需要），并在对象构造后设置对象实例属性，请参见 Injecting Dependencies。
 
-##### [Instantiation with a Static Factory Method](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-class-static-factory-method)
+#### [Instantiation with a Static Factory Method](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-class-static-factory-method)
 
 使用静态工厂方法创建 bean 时，class 属性指定静态工厂方法的类，factory-method 属性指定静态方法名。主要用于遗留代码中的静态工厂方法：
 
@@ -219,7 +219,7 @@ Spring IoC 容器几乎可以管理你想要管理的任何类。它不仅仅局
     class="examples.ClientService"
     factory-method="createInstance"/>
 ```
-##### [Instantiation by Using an Instance Factory Method](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-class-instance-factory-method)
+#### [Instantiation by Using an Instance Factory Method](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-class-instance-factory-method)
 实例工厂创建 bean 方法
 ```xml
 <!-- the factory bean, which contains a method called createInstance() -->
@@ -235,10 +235,10 @@ Spring IoC 容器几乎可以管理你想要管理的任何类。它不仅仅局
 
 一个工厂方法可以包含多个工厂方法。
 
-##### [Determining a Bean’s Runtime Type](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-type-determination)
-### [1.4. Dependencies](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-dependencies)
+#### [Determining a Bean’s Runtime Type](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-type-determination)
+## [1.4. Dependencies](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-dependencies)
 典型的企业应用程序并不会只包含一个对象（就是 Spring 里的 Bean）。即使是最简单的应用，也会有一些对象共同协作，以一个连贯的应用呈现给终端用户他们所看到的东西。下一节说明你如何从定义许多单独的 Bean Definition 到一个完整实现的应用程序，其中对象相互合作达到目的。
-#### [1.4.1. Dependency Injection](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-collaborators)
+### [1.4.1. Dependency Injection](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-collaborators)
 依赖注入，对象通过构造函数参数、工厂方法的参数，或者在对象构造完毕之后设置到对象实例上的属性，或者工厂方法的返回值。
 
 依赖注入存在两种主要的变体：
@@ -246,10 +246,10 @@ Spring IoC 容器几乎可以管理你想要管理的任何类。它不仅仅局
 - 基于构造函数的依赖注入
 - 基于 Setter 的依赖注入
 
-##### [Constructor-based Dependency Injection](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-constructor-injection)
+#### [Constructor-based Dependency Injection](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-constructor-injection)
 基于构造函数的依赖注入是通过容器调用具有多个参数的构造函数来完成，每个参数代表一个依赖项。
 
-###### [Constructor Argument Resolution](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-constructor-injection)
+##### [Constructor Argument Resolution](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-constructor-injection)
 构造函数参数解析通过参数类型匹配。如果 bean 定义的构造函数参数中不存在潜在的歧义，那么在 bean 定义中定义的构造函数参数的顺序就是当 bean 实例化时提供给构造器的参数的顺序。
 
 
@@ -297,14 +297,14 @@ public ExampleBean(int years, String ultimateAnswer) {
 ```
 
 
-##### [Setter-based Dependency Injection](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-setter-injection)
+#### [Setter-based Dependency Injection](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-setter-injection)
 理论上来说，基于 Setter 的依赖注入是容器在调用无参构造函数或者无参静态工厂方法实例化 bean 之后，再调用 bean 的 setter 方法完成。
 
 `ApplicationContext` 对于它管理的 bean，支持基于构造器的依赖注入，也支持基于 setter 的依赖注入。它还支持，在已经通过构造器注入了一些依赖之后，继续用 setter 注入依赖。
 
 可以用 BeanDefinition 的形式配置依赖项，将其与 PropertyEditior 实例结合使用以将属性从一种格式转换为另一种格式。但是，一般不这样使用编程方式工作，而是用 XML 的 bean 定义，注解，或者 @Configuration + @Bean 方式。然后这些源转换成 BeanDefinition 的实例，用于加载 Spring IoC 容器。
 
-##### [Dependency Resolution Process](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-dependency-resolution)
+#### [Dependency Resolution Process](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-dependency-resolution)
 容器执行 Bean 依赖解析如下：
 
 - 创建 `ApplicationContext` 并使用描述所有 Bean 的配置元数据初始化。配置元数据可以以 XML，Java 代码，或者注解方式指定。
@@ -313,10 +313,10 @@ public ExampleBean(int years, String ultimateAnswer) {
 - 每个属性或者构造器参数从指定格式转换为该属性或者构造器参数的实际类型。默认地，Spring 可以将字符串格式转换为所有内置类型，如 `int`，`long`，`String`，`boolean` 等。
 
 
-#### [1.4.2. Dependencies and Configuration in Detail](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-properties-detailed)
+### [1.4.2. Dependencies and Configuration in Detail](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-properties-detailed)
 你可以定义 bean 属性，构造器参数作为引用其他被管理的 bean，或者作为内联值。Spring 的基于 XML 配置元数据支持在 `<property/>` 以及 `<constructor-arg/>` 之中的子元素类型。
 
-##### [Straight Values (Primitives, Strings, and so on)](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-value-element)
+#### [Straight Values (Primitives, Strings, and so on)](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-value-element)
 `<property/>` 元素的属性 `value` 将一个属性或者构造器参数指定为一个人可读的表现形式。Spring 的 conversion service 用于将这些值从 `String` 转换为属性或者参数的实际类型。以下示例展示了各种值的设置：
 
 ```xml
@@ -345,7 +345,7 @@ public ExampleBean(int years, String ultimateAnswer) {
 </bean>
 ```
 
-##### [The idref element](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-idref-element)
+#### [The idref element](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-idref-element)
 `ideref` 元素是一种错误校验方式，将容器中另一个 bean 的 `id` 传递给 `<constructor-arg/>` 或者 `<property/>` 元素。
 
 ```xml
@@ -366,7 +366,7 @@ public ExampleBean(int years, String ultimateAnswer) {
 
 第一个形式比第二个更好，因为使用 `idref` 标记允许容器在部署期间验证所引用的有名 bean 是否实际存在。
 
-#### [1.4.3. Using `depends-on`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-dependson)
+### [1.4.3. Using `depends-on`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-dependson)
 如果一个 Bean 是另一个 Bean 的依赖项，那通常意味着该 Bean 被设置为另一个 Bean 的属性。通常，你可以在基于 XML 的配置元数据中使用 `<ref/>` 元素来完成此操作。但是，有时候 Bean 之间的依赖不太直接。一个例子是，需要触发类中的静态初始化器，例如数据库驱动程序注册。`depends-on` 属性可以显式强制在使用该元素（`depends-on`）的 Bean 初始化之前，初始化一个或多个 bean。下面的示例使用 `depends-on` 属性来表达对单个 bean 的依赖性：
 
 ```xml
@@ -385,7 +385,7 @@ public ExampleBean(int years, String ultimateAnswer) {
 <bean id="accountDao" class="x.y.jdbc.JdbcAccountDao" />
 ```
 
-#### [1.4.4. Lazy-initialized Beans](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lazy-init)
+### [1.4.4. Lazy-initialized Beans](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lazy-init)
 默认地，`ApplicationContext` 实现类会迅速创建并配置所有的单例 bean，这作为初始化过程的一部分。通常，这种预启动是可取的，因为可以立即发现配置或者环境中的错误，而不是几个小时，甚至几天之后才发现。当这种行为不可取时，你可以通过将 Bean Definition 标记为懒初始化来防止对单例 bean 的预实例化。懒初始化 bean 告诉 IoC 容器首次请求时要创建一个 bean 实例，而不是在启动时创建一个 bean 实例。
 
 在 XML 中，此行为由 `<bean/>` 元素上的 `lazy-init` 属性控制，如下示例所示：
@@ -406,7 +406,7 @@ public ExampleBean(int years, String ultimateAnswer) {
 </beans>
 ```
 
-#### [1.4.5. Autowiring Collaborators](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-autowire)
+### [1.4.5. Autowiring Collaborators](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-autowire)
 Spring 容器可以自动绑定协作 Bean 之间的关系。你可以让 Spring 自动地通过审查 `ApplicationContext` 的内容为你的 Bean 解析协作者的话（其他 Bean）。自动绑定有如下优势：
 
 - 自动绑定可以大大减少指定属性或者构造器参数的需求。
@@ -414,7 +414,7 @@ Spring 容器可以自动绑定协作 Bean 之间的关系。你可以让 Spring
 
 
 
-##### [Limitations and Disadvantages of Autowiring](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-autowired-exceptions)
+#### [Limitations and Disadvantages of Autowiring](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-autowired-exceptions)
 
 考虑自动绑定的局限性和劣势：
 
@@ -422,7 +422,7 @@ Spring 容器可以自动绑定协作 Bean 之间的关系。你可以让 Spring
 - 自动绑定不如显式绑定精确。虽然，如前面表格所述，Spring 在可能有产生无法预测结果的歧义情况下，小心地避免猜测。你由 Spring 管理的对象之间的关系不再明确记录。
 - 那些能够从 Spring 容器中生成文档的工具可能无法获得自动绑定信息
 - 可能容器中多个 Bean Definition 都可以匹配待绑定的 Setter 方法或者构造器参数指定的类型。对于数字，集合，或者 `Map` 实例，这未必是个问题。但是，对于期望单个值得依赖，这种歧义无法解决。如果没有唯一得 Bean Definition，则会抛出异常。
-#### [1.4.6. Method Injection](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-method-injection)
+### [1.4.6. Method Injection](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-method-injection)
 在大多数应用场景中，多数的 bean 都是单例。当一个单例 bean 需要与另一个单例 bean 协作，或者一个非单例 bean 需要与另一个非单例 bean 协作，你通常会定义其中一个 bean 为另一个的属性来处理依赖关系。当 bean 的生命周期不同时，就会出现问题。假设单例 bean A 需要使用非单例（prototype）bean B，也许是在 A 的每个方法调用上。容器只会创建单例 bean A 一次，因此，只有一个机会可以设置属性 。不可能每次需要时容器都为 bean A 提供一个新的 bean B 实例。
 
 > **作者的话** 官方的意思应该是 bean A 的方法调用都需要一个全新的 bean B，而不是复用同一个，但是在遵循控制反转的规则下，又无法每次需要时从容器中得到一个全新的 bean B。
@@ -430,14 +430,54 @@ Spring 容器可以自动绑定协作 Bean 之间的关系。你可以让 Spring
 解决方案是放弃一些控制反转。你可以让 bean A 实现 `ApplicationContextAware` 接口来感知容器，并且，每当 bean A 需要的时候，通过调用容器的 `getBean("B")` 请求（通常是新的）一个 bean B 实例。
 
 
-### [1.5. Bean Scopes](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-scopes)
+## [1.5. Bean Scopes](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-scopes)
+
+当你创建一个 Bean Definition 时，你就是创建了一个用于创建该 Bean Definition 定义的 class 实例的配方。Bean Definition 时一个配方的想法很重要，因为它意味着，如 class 一样，你可以从一个配方中创建许多对象实例。
+
 Spring Framework 支持 6 个范围，其中四个仅在使用 web-aware `ApplicationContext`
 
 |Scope|Description|
 |-|-|
 |singleton|（默认值）对于每个 Spring IoC 容器，将单个 Bean Definition 范围示为单个对象实例|
 |prototype|将单个 Bean Definition 范围示为任意数量的对象实例|
-### [1.6. Customizing the Nature of a Bean](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-nature)
+|request|将单个 Bean Definition 作用于单个 HTTP 请求的生命周期。也就是说，每个 HTTP 请求都有自己的 Bean 实例，该实例是在单例 Bean Definition 后面创建的。只有在支持 Web 的 `SpringApplicationContext` 上下文中才有效。|
+|session|将单个 Bean Definition 作用于 HTTP Session 的生命周期。只有在支持 Web 的 Spring 的 `ApplicationContext` 上下文中才有效。|
+|application|将单个 Bean Definition 作用于 `ServletContext` 的生命周期。只有在支持 Web 的 Spring 的 `ApplicationContext` 的上下文中才有效|
+|websocket|将单例 Bean Definition 作用于 `WebSocket` 的生命周期。只有在支持 Web 的 Spring 的 `ApplicationContext` 上下文中才有效。|
+
+
+### [1.5.1. The Singleton Scope](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-scopes-singleton)
+
+
+### [1.5.4. Request, Session, Application, and WebSocket Scopes](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-scopes-other)
+
+
+`request`，`session`，`application`，`websocket` 作用域只有在使用 Web 感知的 Spring 的 `ApplicationContext` 实现（例如，`XmlWebApplicationContext`）时才可用。
+
+#### [Request scope](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-scopes-request)
+
+考虑以下关于 Bean Definition 的 XML 配置:
+
+```xml
+<bean id="loginAction" class="com.something.LoginAction" scope="request"/>
+```
+
+Spring 容器通过对每个 HTTP 请求使用 `loginAction` Bean Definition 来创建 `LoginAction` Bean 的新实例。也就是说，`loginAction` Bean 的作用域是 HTTP 请求级别。你可以随心所欲地更改创建的实例的内部状态，因为从同一个 `loginAction` Bean Definition 创建的其他实例不会看到这些状态的改变。他们对每个请求都比较特别。当请求完成处理时，作用域为该请求的 Bean 将被丢弃。
+
+当使用注解驱动组件或者 Java 配置时，`@RequestScope` 注解将组件分配给 `request` 作用域。下面的例子说明了如何做到这一点:
+
+```java
+@RequestScope
+@Component
+public class LoginAction {
+    // ...
+}
+```
+
+
+
+
+## [1.6. Customizing the Nature of a Bean](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-nature)
 Spring Framework 提供了许多可用的接口来自定义 bean 的性质。本节将它们分组为如下：
 
 - Lifecycle Callbacks
@@ -445,7 +485,7 @@ Spring Framework 提供了许多可用的接口来自定义 bean 的性质。本
 - Other `Aware` Interfaces
 
 
-#### [1.6.1. Lifecycle Callbacks](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lifecycle)
+### [1.6.1. Lifecycle Callbacks](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lifecycle)
 要与 Bean 生命周期的容器管理交互，你可以实现 Spring 的 `InitializingBean` 和 `DisposableBean` 接口。该容器为前者调用 `afterPropertiesSet()`，为后者调用调用 `destroy()`，这使得在 bean 的初始化和销毁时执行某些操作。
 
 > **作者的话** `InitializingBean` 方法的调用是通过创建 bean 的过程中由 `AbstractAutowireCapableBeanFactory` 调用 `invokeInitMethods` 方法实现的，该方法除了调用接口实现的方法，还可以触发自定义 init 方法的调用
@@ -473,7 +513,7 @@ Spring Framework 提供了许多可用的接口来自定义 bean 的性质。本
 
 Spring 使用 BeanPostProcessor 实现来处理找到的任何回调接口并调用适当的方法。可以自定义功能。
 
-##### [Initialization Callbacks](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lifecycle-initializingbean)
+#### [Initialization Callbacks](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lifecycle-initializingbean)
 `org.springframework.beans.factory.InitializingBean` 接口让 bean 可以在容器设置所有必要的属性之后执行初始化工作。`InitializingBean` 接口指定了一个方法：
 ```java
 void afterPropertiesSet() throws Exception;
@@ -517,13 +557,13 @@ public class AnotherExampleBean implements InitializingBean {
 
 但是，前面两个示例中的第一个不会将代码与 Spring 耦合。
 
-##### [Destruction Callbacks](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lifecycle-disposablebean)
+#### [Destruction Callbacks](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lifecycle-disposablebean)
 实现 DisposableBean 接口可以让 bean 在容器销毁它时执行回调。
 
 给 `destroy-method` 或者 `default-destroy-method` 赋予特殊值 `(inferred)` 会进行方法推断，如：java.io.Closeable，java.lang.AutoCloseable 的实现方法。
 
 &nbsp;
-##### [Default Initialization and Destroy Methods](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lifecycle-default-init-destroy-methods)
+#### [Default Initialization and Destroy Methods](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lifecycle-default-init-destroy-methods)
 在 `<beans>` 指定属性：
 
 - default-init-method
@@ -532,7 +572,7 @@ public class AnotherExampleBean implements InitializingBean {
 此属性可以被 `<bean>` 的属性 init-method 和 destroy-method 覆盖
 
 
-##### [Combining Lifecycle Mechanisms](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lifecycle-combined-effects)
+#### [Combining Lifecycle Mechanisms](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lifecycle-combined-effects)
 为同一个 bean 配置多个生命周期机制，具有不同的初始化方法，调用如下：
 
 1. @PostConstruct 方法
@@ -546,7 +586,7 @@ public class AnotherExampleBean implements InitializingBean {
 3. 自定义配置的 destroy()
 
 
-##### [Startup and Shutdown Callbacks](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lifecycle-processor)
+#### [Startup and Shutdown Callbacks](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-lifecycle-processor)
 `Lifecycle` 接口为那些有自己生命周期需求的对象定义了必要的方法（例如启动或停止某些后台处理过程）：
 ```java
 public interface Lifecycle {
@@ -597,12 +637,12 @@ public interface SmartLifecycle extends Lifecycle, Phased {
 
 
 
-##### [Shutting Down the Spring IoC Container Gracefully in Non-Web Applications](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-shutdown)
+#### [Shutting Down the Spring IoC Container Gracefully in Non-Web Applications](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-shutdown)
 
 > 本节仅适用于非 Web 应用。当关闭相关的 Web 应用时，Spring 基于 Web 的 `ApplicationContext` 实现已经有了适当的代码，可以优雅地关闭 Spring IoC 容器。
 
 
-#### [1.6.2. `ApplicationContextAware` and `BeanNameAware`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-aware)
+### [1.6.2. `ApplicationContextAware` and `BeanNameAware`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-aware)
 当 `ApplicationContextAware` 创建一个实现了 `org.springframework.context.ApplicationContextAware` 接口的对象实例时，会提供一个 `ApplicationContext` 的引用给该实例。下面几行展示了 `ApplicationContextAware` 接口的定义：
 
 ```java
@@ -637,7 +677,7 @@ public interface BeanNameAware {
 > **作者的话** 所以，顺序应该是填充属性（populate），Aware 回调，init 回调。
 
 
-#### [1.6.3. Other Aware Interfaces](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aware-list)
+### [1.6.3. Other Aware Interfaces](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aware-list)
 除了 `ApplicationContextAware` 和 `BeanNameAware`（前面讨论过）之外，Spring 还提供了广泛的 `Aware` 回调接口，使得 bean 向容器指示它们需要一定的基础架构依赖。正如一般规则，名称表示依赖类型。下表总结了最重要的几个 `Aware` 接口：
 
 |Name|Injected Dependency|Explained in…​|
@@ -656,7 +696,7 @@ public interface BeanNameAware {
 |ServletContextAware|
 
 
-### [1.7. Bean Definition Inheritance](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-child-bean-definitions)
+## [1.7. Bean Definition Inheritance](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-child-bean-definitions)
 Bean Definition 可以包含许多配置信息，包括构造器参数，属性值，特定于容器的信息，例如初始化方法，静态工厂方法名等。子 Bean Definition 从父 Definition 继承配置数据。子 Definition 可以覆盖一些值，或者根据需要添加其他值。使用父子 Bean Definition 可以节约大量键入。有效地，这是一种模板。
 
 如果你以编程的方式使用 `ApplicationContext` 接口，那么子 Bean Definition 以 `ChildBeanDefinition` 类标表示。大多数用户在这一层不与它们合作。相反，它们在类中声明式配置 Bean Definition，例如 `ClassPathXmlApplicationContext`。当你使用基于 XML 的配置元数据时，你可以通过使用 `parent` 属性来指示子 Bean Definition，将父 bean 指定为该属性的值。下面的示例展示了怎么做：
@@ -676,11 +716,11 @@ Bean Definition 可以包含许多配置信息，包括构造器参数，属性�
 ```
 
 
-### [1.8. Container Extension Points](https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-extension)
+## [1.8. Container Extension Points](https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-extension)
 
 通常，应用程序开发者不必子类化 `ApplicationContext` 实现类。取而代之的是，可以通过插入特殊集成接口实现来扩展 Spring IoC 容器。接下来几节描述了这些集成接口。
 
-#### [1.8.1. Customizing Beans by Using a `BeanPostProcessor`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-extension-bpp)
+### [1.8.1. Customizing Beans by Using a `BeanPostProcessor`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-extension-bpp)
 `BeanPostProcessor` 接口定义了一些回调方法，你可以实现它们来提供自己的实例化逻辑（或者覆盖容器默认的），依赖解析逻辑等。如果你要在 Spring 容器完成实例化，配置，初始化 bean 之后，实现一些自己的逻辑，则可以插入一个或多个自定义的 `BeanPostProcessor` 实现。
 
 你可以配置多个 `BeanPostProcessor` 实例，并且通过设置 `order` 属性控制这些 `BeanPostProcessor` 实例执行顺序。你只有在 `BeanPostProcessor` 实现 `Ordered` 接口时才能设置此属性。如果你编写自己的 `BeanPostProcessor`，则也应该考虑实现 `Ordered` 接口。有关更多信息，请参阅 `BeanPostProcessor` 和 `Ordered` 接口的 javadoc。另请参见 programmatic registration of BeanPostProcessor instances.
@@ -706,13 +746,13 @@ Bean Definition 可以包含许多配置信息，包括构造器参数，属性�
 |AutowiredAnnotationBeanPostProcessor|用于自动注入 @Autowired @Value @Inject|
 
 
-##### [Example: Hello World, BeanPostProcessor-style](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-extension-bpp-examples-hw)
+#### [Example: Hello World, BeanPostProcessor-style](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-extension-bpp-examples-hw)
 
-##### [Example: The AutowiredAnnotationBeanPostProcessor](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-extension-bpp-examples-aabpp)
+#### [Example: The AutowiredAnnotationBeanPostProcessor](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-extension-bpp-examples-aabpp)
 使用回调接口或者注解，配合自定义的 `BeanPostProcessor` 实现是扩展 Spring IoC 容器的常见手段。一个例子是 Spring `AutowiredAnnotationBeanPostProcessor` —— 这是 `BeanPostProcessor` 的一个实现类，其与 Spring 分布和 `@Autowired` 注解字段，Setter 方法，以及任意配置方法一起
 
 
-#### [1.8.2. Customizing Configuration Metadata with a BeanFactoryPostProcessor](https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-extension-factory-postprocessors)
+### [1.8.2. Customizing Configuration Metadata with a BeanFactoryPostProcessor](https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-extension-factory-postprocessors)
 `BeanFactoryPostProcessor` 是一个扩展点。`BeanFactoryPostProcessor` 与 `BeanPostProcessor` 语义类似，但有一个主要区别：`BeanFactoryPostProcessor` 对 bean 配置元数据进行操作。Spring Ioc 容器允许 `BeanFactoryPostProcessor` 读取配置元数据，并且可以在实例化除了 `BeanFactoryPostProcessor` 任何 bean 之前修改这些配置元数据。
 
 > `BeanDefinitionRegistryPostProcessor` 是 `BeanFactoryPostProcessor` 的子接口。
@@ -722,7 +762,7 @@ Bean Definition 可以包含许多配置信息，包括构造器参数，属性�
 为了应用这些改变到容器中的配置元数据，当 bean factory 后置处理器声明在 `ApplicationContext` 中时，它会自动执行。Spring 包含了许多预定义的 bean factory 后置处理器，比如 `PropertyOverrideConfigurer` 以及 `PropertySourcesPlaceholderConfigurer`。
 
 
-### [1.9. Annotation-based Container Configuration](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-annotation-config)
+## [1.9. Annotation-based Container Configuration](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-annotation-config)
 
 > <center><strong>配置 Spring 注解比 XML 更好吗？</strong></center>
 > 引入基于注解的配置出现了一个问题，即这种方式是否比 XML 更好。简短的答案是：看情况。具体就是，每种方法都有其优点和缺点，通常，开发人员决定哪种测策略更适合他们。由于他们的定义方式，注解在声明的时候提供许多上下文，使得配置更短，更简洁。但是，XML 擅于在不触及源代码以及重新编译的情况下，将组件关联起来。一些开发者更喜欢让关联接近源代码，而另一个开发者人为注解类不再是 POJO，此外，配置变得分散且难以控制。
@@ -732,7 +772,7 @@ Bean Definition 可以包含许多配置信息，包括构造器参数，属性�
 基于注解得配置提供了 XML 设置的可替代方案，该方案依赖于字节码元数据来绑定组件而不是声明。无需使用 XML 去描述 Bean 的绑定，开发者只需将配置移动到组件类本身，在相关的类，方法，或者字段声明上面使用注解。如 [Example: The AutowiredAnnotationBeanPostProcessor](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factory-extension-bpp-examples-aabpp) 所述，结合注解使用 `BeanPostProcessor` 是扩展 Spring IoC 容器的通用方式。
 
 
-#### [1.9.1. @Required](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-required-annotation)
+### [1.9.1. @Required](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-required-annotation)
 `@Required` 注解用于 bean 的 Setter 方法，如下示例：
 
 ```java
@@ -762,7 +802,7 @@ public class SimpleMovieLister {
 
 
 
-#### [1.9.2. Using `@Autowired`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-autowired-annotation)
+### [1.9.2. Using `@Autowired`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-autowired-annotation)
 
 > 在本节包含的示例中，你可以使用 JSR 330 的 `@Inject` 注解代替 Spring 的 `@Autowired` 注解。有关更多详情，参见[此处](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-standard-annotations)。
 
@@ -933,7 +973,7 @@ public class SimpleMovieLister {
 
 注入见：`org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor#postProcessProperties`
 
-#### [1.9.3. Fine-tuning Annotation-based Autowiring with @Primary](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-autowired-annotation-primary)
+### [1.9.3. Fine-tuning Annotation-based Autowiring with @Primary](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-autowired-annotation-primary)
 按照**类型**的自动绑定可能产生多个候选者，因此有必要使用更多的控制进行选择。其中一种方式就是使用 `@Primary` 注解。`@Primary` 注解表示，当多个 bean 候选者需要自动绑定到一个单值依赖上时，特定的 bean 应该给予优先权。如果多个候选者中存在一个主要的 bean，那么它将会自动绑定到值上。
 
 
@@ -944,7 +984,7 @@ public class SimpleMovieLister {
 > **作者的话** 该注解完全可以忽视，一般并不希望自动绑定出现歧义，或者直接使用 `@Resource` 进行准确绑定。
 
 
-#### [1.9.4. Fine-tuning Annotation-based Autowiring with Qualifiers](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-autowired-annotation-qualifiers)
+### [1.9.4. Fine-tuning Annotation-based Autowiring with Qualifiers](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-autowired-annotation-qualifiers)
 当你需要在选择过程上有更多控制时，可以使用 `@Qualifier` 注解。你可以将 qualifier 的值与特定参数绑定，缩小类型匹配的集合，以便于能选出特定的那个 bean。
 
 可以用于：字段、方法参数
@@ -971,12 +1011,12 @@ Qualifier 也可以适用于类型集合，比如 `Set<Object>`，这意味着�
 > - 如果你希望通过名称进行注解驱动注入，但不想使用 `@Autowired`，即使这是可以在类型匹配的候选者中选择对应名称的 bean，你可以使用 JSR-250 注解 `@Resource`，这是一个语义上定义为通过使用唯一名称标识特定组件的注解，与声明类型无关。
 
 
-#### [1.9.5. Using Generics as Autowiring Qualifiers](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-generics-as-qualifiers)
+### [1.9.5. Using Generics as Autowiring Qualifiers](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-generics-as-qualifiers)
 除了显式使用 `@Qualifier` 注解，你可以使用 Java 泛型作为隐式的限定。
 
-#### [1.9.6. Using CustomAutowireConfigurer](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-custom-autowire-configurer)l
+### [1.9.6. Using CustomAutowireConfigurer](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-custom-autowire-configurer)l
 
-#### [1.9.7. Injection with @Resource](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-resource-annotation)
+### [1.9.7. Injection with @Resource](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-resource-annotation)
 Spring 也支持 JSR-250 注解 `@Resource`，用于字段或者 bean 属性的 setter 方法。
 
 `@Resource` 具有一个 `name` 属性。默认地，Spring 将该值当作被注入的 bean 的名字。
@@ -985,7 +1025,7 @@ Spring 也支持 JSR-250 注解 `@Resource`，用于字段或者 bean 属性的 
 
 如果没有指定 name，默认的名称将会从字段名或者 setter 方法中解析出来。没有显式地指定名称，类似于 @Autowired，@Resource 将查找主要地类型匹配而不是特定 名称，并且解析熟知的 BeanFactory, ApplicationContext, ResourceLoader, ApplicationEvenetPublisher, MessageSource 接口。
 
-#### [1.9.8. Using @Value](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-value-annotations)
+### [1.9.8. Using @Value](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-value-annotations)
 `@Value` 典型的用法是注入外部的属性
 
 使用位置：字段、方法参数
@@ -994,28 +1034,28 @@ Spring 也支持 JSR-250 注解 `@Resource`，用于字段或者 bean 属性的 
 
 Spring 默认是宽松解析，如果要严格解析，配置 `PropertySourcesPlaceholderConfigurer`，Spring Boot 是默认配置的（见 `PropertyPlaceholderAutoConfiguration`）。
 
-#### [1.9.9. Using @PostConstruct and @PreDestroy](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-postconstruct-and-predestroy-annotations)
+### [1.9.9. Using @PostConstruct and @PreDestroy](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-postconstruct-and-predestroy-annotations)
 `CommonAnnotationBeanPostProcessor` 不仅能识别 `@Resource` 注解，还可以识别 JSR-250 生命周期注解：`javax.annotation.PostConstruct` 和 `javax.annotation.PreDestroy`。
 
 
 > 在标准 JDK 6 到 JDK 8 中，`@Resource`, `@PostConstruct`, `@PreDestroy` 注解是其中的一部分。但是，整个 `javax.annotation` 包在 JDK 9 中与核心模块分开，并最终在 JDK 11 移除。如果需要，则应该通过 maven 中心获取 `javax.annotation-api` 组件，简单地添加到类路径中。
 
-### [1.10. Classpath Scanning and Managed Components](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-classpath-scanning)
+## [1.10. Classpath Scanning and Managed Components](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-classpath-scanning)
 通过隐式地类路径扫描找到候选组件。候选组件是那些与过滤器标准相匹配的类，并且会有一个相关的 bean 定义被注册到容器中。这会消除使用 XML 执行 bean 定义的需求。取而代之的，你可以使用注解，AspectJ 类型表达式，或者你自己自定义的过滤器原则来挑选出注册到容器中的 bean 定义。
 
-#### [1.10.1. @Component and Further Stereotype Annotations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-stereotype-annotations)
+### [1.10.1. @Component and Further Stereotype Annotations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-stereotype-annotations)
 `@Repository` 是那些具有仓库（也可以认为是 Data Access Object）作用的类的标记。
 
 Spring 提供了更多注解：`@Component`, `@Service`, `@Controller`。`@Component` 对于任何 Spring 管理的组件来说，是一个通用注解。`@Repository`, `@Service`, `@Controller` 是 `@Component` 的特例。因此，你可以用 `@Component` 注解你的组件类，但是，通过用 `@Repository`, `@Service`, `@Controller` 注解，你的类可以更好地通过工具处理，或者与切面关联。
 
 
-#### [1.10.2. Using Meta-annotations and Composed Annotations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-meta-annotations)
+### [1.10.2. Using Meta-annotations and Composed Annotations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-meta-annotations)
 Spring 提供的许多注解可以作为你自己代码的元注解，以供其他注解使用。
 
 你可以组合元注解创建组合型注解。例如，`@RestController` 注解就是 Spring MVC 框架中，由 `@Controller` 和 `@ResponseBody` 组合而成。
 
 
-#### [1.10.3. Automatically Detecting Classes and Registering Bean Definitions](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-scanning-autodetection)
+### [1.10.3. Automatically Detecting Classes and Registering Bean Definitions](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-scanning-autodetection)
 Spring 可以自动检测刻板印象类，并注册相关的 `BeanDefinition` 实例到 `ApplicationContext`。例如，以下两个类有资格被自动检测到：
 
 ```java
@@ -1052,16 +1092,16 @@ public class JpaMovieFinder implements MovieFinder {
 > - 你可以通过包含 `annotation-config`，设置其值为 `false` 来禁用 `AutowiredAnnotationBeanPostProcessor ` 和 `CommonAnnotationBeanPostProcessor ` 的注册。
 
 
-#### [1.10.4. Using Filters to Customize Scanning](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-scanning-filters)
+### [1.10.4. Using Filters to Customize Scanning](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-scanning-filters)
 默认地，本身是用 @Component 注解的类，会被检测作为候选组件。但是也可以配置过滤器。
 
 
-#### [1.10.5. Defining Bean Metadata within Components](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factorybeans-annotations)
+### [1.10.5. Defining Bean Metadata within Components](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-factorybeans-annotations)
 
-#### [1.10.8. Providing Qualifier Metadata with Annotations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-scanning-qualifiers)
+### [1.10.8. Providing Qualifier Metadata with Annotations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-scanning-qualifiers)
 
 
-### [1.11. Using JSR 330 Standard Annotations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-standard-annotations)
+## [1.11. Using JSR 330 Standard Annotations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-standard-annotations)
 从 Spring 3.0 开始，Spring 为 JSR-330 标准注解（依赖注入）提供了支持。这些注解与 Spring 注解一样以相同的方式被扫描。要使用他们，你必须在类路径中持有相关的 jar 包。
 
 > 如果你使用 maven，`javax.inject` 的 artifact 可以在标准 maven 仓库（https://repo1.maven.org/maven2/javax/inject/javax.inject/1/）直接获得。你可以将下面的依赖添加到 pom.xml：
@@ -1073,7 +1113,7 @@ public class JpaMovieFinder implements MovieFinder {
 > </dependency>
 > ```
 
-#### [1.11.1. Dependency Injection with @Inject and @Named](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-inject-named)
+### [1.11.1. Dependency Injection with @Inject and @Named](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-inject-named)
 为了代替 `@Autowired`，你可以使用 `@javax.inject.Inject`，如下所示：
 
 ```java
@@ -1148,7 +1188,7 @@ public class SimpleMovieLister {
 ```
 
 
-#### [1.11.2. @Named and @ManagedBean: Standard Equivalents to the @Component Annotation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-named)
+### [1.11.2. @Named and @ManagedBean: Standard Equivalents to the @Component Annotation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-named)
 你可以使用 `@javax.inject.Named` 或者 `@javax.annotation.ManagedBean` 代替 `@Component`，如下示例所示：
 
 ```java
@@ -1204,7 +1244,7 @@ public class AppConfig  {
 > **作者的话** 之所以无法构建自定义的组合注解，是因为 Spring 不会去检查你的自定义注解。见 `ClassPathScanningCandidateComponentProvider` 的 `includeFilters`。
 
 
-#### [1.11.3. Limitations of JSR-330 Standard Annotations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-standard-annotations-limitations)
+### [1.11.3. Limitations of JSR-330 Standard Annotations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-standard-annotations-limitations)
 当你使用标准注解时，你应该知道，有一些重要功能是不可用的，如下表所示：
 
 |Spring|java.inject.*|javax.inject restrictions / comments|
@@ -1218,14 +1258,14 @@ public class AppConfig  {
 |@Lazy|-|没有对等体
 |ObjectFactory|Provider|
 
-### [1.12. Java-based Container Configuration](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java)
-#### [1.12.1. Basic Concepts: `@Bean` and `@Configuration`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-basic-concepts)
+## [1.12. Java-based Container Configuration](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java)
+### [1.12.1. Basic Concepts: `@Bean` and `@Configuration`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-basic-concepts)
 在 Spring 新的 Java 注解支持中的中央工件是 `@Configuration` 注解类以及 `@Bean` 注解方法。
 
 `@Bean` 注解用于表明方法是实例化，配置和初始化一个由 Spring IoC 容器管理的新对象。对于那些熟悉 Spring `<bean/>` XML 配置的人，`@Bean` 注解扮演着与 `<bean/>` 元素相同的角色。
 
 
-#### [1.12.2. Instantiating the Spring Container by Using `AnnotationConfigApplicationContext`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-instantiating-container)
+### [1.12.2. Instantiating the Spring Container by Using `AnnotationConfigApplicationContext`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-instantiating-container)
 `AnnotationConfigApplicationContext` 在 
 以下各节记录了 Spring 的 `AnnotationConfigApplicationContext`，在 Spring 3.0 引入。这种万能的 `ApplicationContext` 实现不仅能接收 `@Configuration` 类作为输入，而且能够接受 `@Component` 类以及 JSR-330 元数据注解的类。
 
@@ -1234,7 +1274,7 @@ public class AppConfig  {
 当 `@Component` 或者 JSR-330 注解的类作为输入时，它们会注册为 Bean Definition，并且在必要时，这些类中的依赖元数据，例如 `@Autowired` 或者 `@Inject` 都会被使用。
 
 
-##### [Simple Construction](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-instantiating-container-constructor)
+#### [Simple Construction](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-instantiating-container-constructor)
 
 与实例化 `ClassPathXmlApplicationContext` 时使用 Spring XML 文件作为输入的方式相同，当你实例化一个 `AnnotationConfigApplicationContext` 时，你可以使用 `@Configuration` 类作为输入。这是考虑到完全无 XML 的 Spring 容器的使用，如下示例所示：
 
@@ -1258,7 +1298,7 @@ public static void main(String[] args) {
 前面的示例假定 `MyServiceImpl`，`Dependency1`，以及 `Dependency2` 使用了 Spring 依赖注入注解，例如 `@Autowired`。
 
 
-##### [Building the Container Programmatically by Using `register(Class<?>…​)`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-instantiating-container-register)
+#### [Building the Container Programmatically by Using `register(Class<?>…​)`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-instantiating-container-register)
 
 你可以通过使用无参构造器实例化一个 `AnnotationConfigApplicationContext`，然后使用 `register()` 对其进行配置。当程序化地构建了一个 `AnnotationConfigApplicationContext` 这种方式特别有用。以下示例显示了如何做到：
 
@@ -1274,7 +1314,7 @@ public static void main(String[] args) {
 ```
 
 
-##### [Enabling Component Scanning with `scan(String…​)`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-instantiating-container-scan)
+#### [Enabling Component Scanning with `scan(String…​)`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-instantiating-container-scan)
 
 要启用组件扫描，你可以按以下方式注解 `@Configuration` 类：
 
@@ -1298,7 +1338,7 @@ public static void main(String[] args) {
 ```
 
 
-##### [Support for Web Applications with `AnnotationConfigWebApplicationContext`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-instantiating-container-web)
+#### [Support for Web Applications with `AnnotationConfigWebApplicationContext`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-instantiating-container-web)
 
 `AnnotationConfigApplicationContext` 的 `WebApplicationContext` 变体可用 `AnnotationConfigWebApplicationContext`。你在在配置 Spring `ContextLoaderListener` Servlet Listener，Spring MVC `DispatcherServlet` 等时候，使用此实现。下面的 `web.xml` 摘要配置了一个典型的 Spring MVC Web 应用（请注意 `contextClass` context-param 和 init-param 的使用）：
 
@@ -1357,12 +1397,12 @@ public static void main(String[] args) {
 
 
 
-#### [1.12.3. Using the `@Bean` Annotation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-bean-annotation)
+### [1.12.3. Using the `@Bean` Annotation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-bean-annotation)
 `@Bean` 是一种方法级注解，是 `<bean/>` 元素的等价。注解支持一些 `<bean/>` 提供的属性，例如：*init-method destroy-method autowiring name.
 
 你可以在 `@Configuration` 注解类或者 `@Component` 注解类中使用 `@Bean` 注解。
 
-##### [Declaring a Bean](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-declaring-a-bean)
+#### [Declaring a Bean](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-declaring-a-bean)
 要声明一个 Bean，你可以用使用 `@Bean` 注解一个方法。你可以使用此方法在 `ApplicationContext` 中注册一个 Bean Definition，其类型由方法返回值指定。默认地，Bean 名称与方法名称相同。以下示例展示了 `@Bean` 方法声明：
 
 ```java
@@ -1403,7 +1443,7 @@ public class AppConfig {
 
 但是，这将预先类型预测的可见性限制为指定的接口类型（`TransferService`）。然后，只有一次容器知道完全类型，被影响的单例已经被实例化。非懒惰单例 bean 根据其声明 order 初始化。因此，你可能看到不同类型的匹配结果，具体取决于其他组件试图通过非声明类型（例如 @Autowired TransferServiceImple，只有在实例化了 `TransferService` bean 之后才能解析）匹配。
 
-##### [Bean Aliasing](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-bean-aliasing)
+#### [Bean Aliasing](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-bean-aliasing)
 正如 Naming Beans 讨论的，有时候希望给一个 bean 多个名字，也成为 bean 别名。
 
 如果希望给 bean 赋予多个名称，或者称之为别名，你可以向 `@Bean` 的 `name` 属性传递一个字符串数组。为此，`@Bean` 注解的 `name` 属性接受一个字符串数组。以下示例显示了如何为一个 bean 设置许多别名：
@@ -1420,10 +1460,10 @@ public class AppConfig {
 ```
 
 
-#### [1.12.4. Using the `@Configuration` annotation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-configuration-annotation)
+### [1.12.4. Using the `@Configuration` annotation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-configuration-annotation)
 `@Configuration` 是一个类级别的注解，表明一个对象是 Bean Definition 的来源。`@Configuration` 类通过 public `@Bean` 注解方法声明 Bean。`@Configuration` 类上的 `@Bean` 方法的调用也可以用于定义 Bean 之间的依赖。
 
-##### [Injecting Inter-bean Dependencies](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-injecting-dependencies)
+#### [Injecting Inter-bean Dependencies](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-injecting-dependencies)
 当 Bean 依赖于另一个 Bean 时，表现为依赖让一个 Bean 方法调用另一个一样简单，如下示例所示：
 ```java
 @Configuration
@@ -1446,7 +1486,7 @@ public class AppConfig {
 > 仅当 `@Bean` 方法声明在 `@Configuration` 类中时，这种声明 Bean 间依赖的方法才生效。你无法通过使用普通 `@Component` 类声明 Bean 间依赖。
 
 
-##### [Lookup Method Injection](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-method-injection)
+#### [Lookup Method Injection](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-method-injection)
 
 如前所述，lookup method injection 是你比较少用的高级功能。在单例 Bean 依赖于原型 Bean 时这很有用。使用 Java 进行此类配置提供了一种天然的方式用于实现这种模式。下面的例子展示了如何查找方法注入：
 
@@ -1487,10 +1527,10 @@ public CommandManager commandManager() {
 }
 ```
 
-#### [1.12.5. Composing Java-based Configurations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-composing-configuration-classes)
+### [1.12.5. Composing Java-based Configurations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-composing-configuration-classes)
 Spring 的基于 Java 的配置特色让你可以组合注解，从而降低配置的复杂度。
 
-##### [Using the @Import Annotation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-using-import)
+#### [Using the @Import Annotation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-using-import)
 就像在 Spring XML 文件中使用 `<import/>` 元素以帮助模块化配置，`@Import` 注解也允许你从另一个配置类加载 `@Bean` 定义，如下示例所示：
 
 ```java
@@ -1531,7 +1571,7 @@ public class ConfigB {
 **框架案例** MyBatis 的自动扫描 @Mapper 注入，@Import(AutoConfiguredMapperScannerRegistrar.class)
 
 &nbsp;
-##### [Conditionally Include @Configuration Classes or @Bean Methods](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-conditional)
+#### [Conditionally Include @Configuration Classes or @Bean Methods](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-conditional)
 有条件地启用或禁用完整的 @Configuration 类，甚至单个 @Bean 方法。最常用的是使用 `@Profile`。
 
 `@Profile` 注解实际上是通过更灵活的称之为 `@Conditional` 的注解实现。`@Conditional` 注解表示：特定的 `org.springframework.context.annotation.Condition` 实现应该在 @Bean 注册之前作为参考。
@@ -1540,10 +1580,10 @@ public class ConfigB {
 
 
 
-##### [Combining Java and XML Configuration](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-combining)
+#### [Combining Java and XML Configuration](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-combining)
 Spring 的 @Configuration 类支持并不是为了完全取代 XML 配置。某些情况下，Spring XML 仍然是一种配置容器的理想方式。在 XML 比较方便或者必须使用的情况下，你可以选择：通过使用例如 `ClassPathXmlApplicationContext` 以 "XML为中心" 的方式实例化容器；或者以 "Java 为中心" 的方式实例化容器，使用 `AnnotationConfigApplicationContext` 以及 `@ImportResource` 注解导入所需的 XML
 
-###### [XML-centric Use of `@Configuration` Classes](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-combining-xml-centric)
+##### [XML-centric Use of `@Configuration` Classes](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-java-combining-xml-centric)
 
 也许最好的方式是从 XML 中引导 Spring 容器，并以点对点的方式包含 `@Configuration` 类。例如，在一个使用 Spring XML 的大型的现有代码库中，很容易在需要的基础上创建 `@Configuration` 类，并将他们从现存的 XML 文件中包含进去。稍后在本节中，我们会介绍这种 "以 XML 为中心" 情况下使用 `@Configuration` 类的选项。
 
@@ -1610,7 +1650,7 @@ public static void main(String[] args) {
 
 
 
-###### [`@Configuration` Class-centric Use of XML with `@ImportResource`]
+##### [`@Configuration` Class-centric Use of XML with `@ImportResource`]
 
 在一些 `@Configuration` 类是配置容器的主要机制的应用中，仍然很可能有必要至少使用一些 XML。在这些情况下，你可以使用 `@ImportResource`，并按你所需定义 XML。这样做可以实现一种 "以 Java 为中心" 的方式配置容器，并将 XML 保持在最低限度。以下示例展示了如何使用 `@ImportSource` 注解来实现按需使用 XML 的 "以 Java 为中心" 的配置：
 
@@ -1657,14 +1697,14 @@ public static void main(String[] args) {
 }
 ```
 
-### [1.13. Environment Abstraction](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-environment)
+## [1.13. Environment Abstraction](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-environment)
 `Environment` 接口是一个集成在容器中的抽象，它模型化了两个关键的应用程序环境方面：profiles 和 properties。
 
 一个 profile 是一个有名的 Bean Definition 逻辑组，仅在给定的 profile 处于激活状态时，Bean Definition 才能注册到容器中。无论是以 XML 方式还是注解方式，bean 都可以分配给一个 profile。`Environment` 关于 profiles 的作用就是决定哪个 profile 当前是激活的，哪个 profiles 应该默认被激活。
 
 属性在几乎所有应用程序都发挥着重要作用，并且可能来自各种源：属性文件，JVM 系统属性，系统环境变量，JNDI，Servlet 上下文参数，ad-hoc `Properties` 对象，`Map` 对象等。`Environment` 对象对于属性的作用就是提供用户一个方便的服务接口，用于配置属性源以及从中解析属性。
 
-#### [1.13.1. Bean Definition Profiles](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-definition-profiles)
+### [1.13.1. Bean Definition Profiles](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-definition-profiles)
 Bean Definition profile 在核心容器中提供了一种机制，可以在不同环境中注册不同的 bean。"environment" 一词对于不同用户来说可能意味着不同的事物，该功能有助于许多用例，例如：
 
 考虑在实际需要 `DataSource` 的应用的第一个用例。在测试环境中，配置可能类似于下面：
@@ -1680,13 +1720,13 @@ public DataSource dataSource() {
 }
 ```
 
-##### [Using `@Profile`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-definition-profiles-java)
+#### [Using `@Profile`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-definition-profiles-java)
 `@Profile` 注解允许你指示当一个或多个指定 profile 激活时，一个组件才有资格注册。
 
 
 `@Profile` 也可以在方法级别声明，这样仅包括了配置类的一个特定 bean。
 
-##### [XML Bean Definition Profiles](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-definition-profiles-xml)
+#### [XML Bean Definition Profiles](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-definition-profiles-xml)
 XML 对应的是 `<bean/>` 元素的 `profile` 属性。我们前面的示例配置可以以两个 XML 文件的方式重写，如下：
 
 ```xml
@@ -1737,7 +1777,7 @@ XML 对应的是 `<bean/>` 元素的 `profile` 属性。我们前面的示例配
 </beans>
 ```
 
-##### [Activating a Profile](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-definition-profiles-enable)
+#### [Activating a Profile](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-definition-profiles-enable)
 可以以多种方式激活 profile：
 
 - Environment API 方式
@@ -1755,7 +1795,7 @@ ctx.getEnvironment().setActiveProfiles("profile1", "profile2");
 -Dspring.profiles.active="profile1,profile2"
 ```
 
-##### [Default Profile](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-definition-profiles-default)
+#### [Default Profile](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-definition-profiles-default)
 
 默认的 profile 表示默认启用的 profile。考虑如下示例：
 
@@ -1779,7 +1819,7 @@ public class DefaultDataConfig {
 你可以通过在 `Environment` 上使用 `setDefaultPrfiles()` 或者声明式地使用 `spring.profiles.default` 来修改默认 profile 的名称。
 
 
-#### [1.13.2. `PropertySource` Abstraction](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-property-source-abstraction)
+### [1.13.2. `PropertySource` Abstraction](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-property-source-abstraction)
 Spring 的 `Environment` 抽象在属性源的可配置层次结构上提供了搜索操作。考虑下面的代码清单：
 
 ```java
@@ -1815,7 +1855,7 @@ sources.addFirst(new MyPropertySource());
 
 在前面的代码中，在搜索中以高优先级添加了 `MyPropertySource`。如果它包含 `my-property` 属性，属性会被检测并返回，支持其他任何 `PropertySource` 中的任何 `my-property` 属性。`MutablePropertySources` API 暴露了许多方法，这些方法允许精确地操纵属性源集合。
 
-#### [1.13.3. Using `@PropertySource`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-using-propertysource)
+### [1.13.3. Using `@PropertySource`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-using-propertysource)
 `@PropertySource` 注解提供了一种便捷的声明式机制，用于将 `PropertySource` 添加到 Spring 的 `Environment` 中。
 
 给定一个名为 `app.properties` 的文件，包含键值对 `testbean.name=myTestBean`，下面的 `@Configuration` 类使用 `@PropertySource`，以这种方式调用 `testBean.getName()` 返回 `myTestBean`：
@@ -1857,7 +1897,7 @@ public class AppConfig {
 
 假定 `my.placeholder` 存在于已经注册的属性源之一（例如，系统属性或者环境变量）中，占位符会被解析为相关值。如果不存在，那么 `default/path` 会被作为默认值。如果未指定默认值，且属性无法解析，将会抛出 `IllegalArgumentException`。
 
-#### [1.13.4. Placeholder Resolution in Statements](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-placeholder-resolution-in-statements)
+### [1.13.4. Placeholder Resolution in Statements](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-placeholder-resolution-in-statements)
 过去，只针对 JVM 系统属性或者环境变量，元素上的占位符可以被解析。现在已不再这样。因为 `Environment` 抽象是集成在容器中的，因此很容易通过它来路由占位符的解析。这意味着你可以以任何你喜欢的方式配置解析流程。你可以通过系统属性或者环境变量更改搜索优先级，或者完全移除它们。你还可以适当地添加自己的属性资源。
 
 具体而言，无论 `customer` 属性定义在哪儿，只要在 `Environment` 中可获得，下面的语句就可以工作：
@@ -1868,7 +1908,7 @@ public class AppConfig {
 </beans>
 ```
 
-### [1.14. Registering a `LoadTimeWeaver`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-load-time-weaver)
+## [1.14. Registering a `LoadTimeWeaver`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-load-time-weaver)
 Spring 使用 `LoadTimeWeaver` 当类加载到 Java 虚拟机时，动态转换这些类。
 
 要启动加载时编织，你可以将 `@EnableLoadTimeWeaving` 添加到你的 `@Configuration` 类，如以下示例所示：
@@ -1887,10 +1927,10 @@ public class AppConfig {
 ```
 一旦配置为 `ApplicationContext`，任何在该 `ApplicationContext` 中的 bean 都可以实现 `LoadTimeWeaverAware`，从而接收到加载时 weaver 示例的引用。
 
-### [1.15. Additional Capabilities of the `ApplicationContext`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-introduction)
-#### [1.15.1. Internationalization using `MessageSource`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-functionality-messagesource)
+## [1.15. Additional Capabilities of the `ApplicationContext`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-introduction)
+### [1.15.1. Internationalization using `MessageSource`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-functionality-messagesource)
 
-#### [1.15.2. Standard and Custom Events](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-functionality-events)
+### [1.15.2. Standard and Custom Events](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-functionality-events)
 `ApplicationContext` 中的事件处理功能通过 `ApplicationEvent` 类以及 `ApplicationListener` 接口提供。如果一个实现了 `ApplicationListener` 接口的 bean 部署到上下文中，那么每次 `ApplicationEvent` 发布到 `ApplicationContext` 时，该 bean 会被通知。本质上，这是一种标准的观察者模式。
 
 Spring 提供的标准事件：
@@ -1903,7 +1943,7 @@ Spring 提供的标准事件：
 - `ServletRequestHandledEvent`
 
 
-##### [Annotation-based Event Listeners](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-functionality-events-annotation)
+#### [Annotation-based Event Listeners](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-functionality-events-annotation)
 在一个 bean 的方法上通过使用 `@EventListener` 注解注册一个事件监听器。
 
 
@@ -1914,11 +1954,11 @@ Spring 提供的标准事件：
 可以通过 `condition` 属性定义一个 SpEL 表达式来添加更多的运行时过滤效果。
 
 
-##### [Asynchronous Listeners](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-functionality-events-async)
+#### [Asynchronous Listeners](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-functionality-events-async)
 如果你希望异步地处理某个事件，那你可以使用常规的 `@Async` 注解。
 
 
-##### [Ordering Listeners](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-functionality-events-order)
+#### [Ordering Listeners](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-functionality-events-order)
 如果你需要在另一个监听器之前调用某个监听器，则你可以添加 `@Order` 注解至方法声明，如下示例所示：
 
 ```java
@@ -1930,10 +1970,10 @@ public void processBlockedListEvent(BlockedListEvent event) {
 ```
 
 
-##### [Generic Events](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-functionality-events-generics)
+#### [Generic Events](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-functionality-events-generics)
 你可以使用泛型来进一步定义事件的架构。例如，使用 `EntityCreatedEvent<T>`，其中 `T` 表示创建的实际实体类型。
 
-### [1.16. The BeanFactory](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-beanfactory)
+## [1.16. The BeanFactory](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-beanfactory)
 `BeanFactory` API 为 Spring IoC 功能提供了基础。它的特定约定主要用于与 Spring 的其他部分以及第三方框架集成，并且它的 `DefaultListableBeanFactory` 实现是更高级别的 `GenericApplicationContext` 容器的委托。
 
 
@@ -1943,7 +1983,7 @@ public void processBlockedListEvent(BlockedListEvent event) {
 请注意，核心 `BeanFactory` API 级别和它的 `DefaultLisableBeanFactory` 实现都没有对配置格式或者任何待使用的组件注解做出规定。所有的风格都通过扩展（如：`XmlBeanDefinitionReader` 和 `AutowiredAnnotationBeanPostProcessor`）进行，并在共享的作为核心元数据表现形式的 `BeanDefinition` 对象上操作。这就是使 Spring 容器如此灵活且可扩展的本质。
 
 
-#### [1.16.1. `BeanFactory` or `ApplicationContext`?](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-introduction-ctx-vs-beanfactory)
+### [1.16.1. `BeanFactory` or `ApplicationContext`?](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#context-introduction-ctx-vs-beanfactory)
 
 在 ApplicationContext 中（如 GenericApplicationContext 实现），可以根据 bean name 或者 bean type（特别是后置处理器） 找到 bean，然而，普通的 DefaultListableBeanFactory 与任何特殊 bean 无关。
 
@@ -1951,12 +1991,12 @@ public void processBlockedListEvent(BlockedListEvent event) {
 
 > 自从 SpringFramework 4.3，如果目标 bean 只定义了一个构造器，那么不再需要指定 @Autowired 注解，见[4.3更新日志](https://docs.spring.io/spring-framework/docs/4.3.29.RELEASE/spring-framework-reference/htmlsingle/#new-in-4.3)
 
-## [2. Resources](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources)
+# [2. Resources](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources)
 
-### [2.1. Introduction](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-introduction)
+## [2.1. Introduction](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-introduction)
 不幸地是，Java 标准的 `java.net.URL` 类和用于各种各样 URL 前缀的标准处理器不足以访问所有的低级资源。例如，没有标准化的 `URL` 实现可以用于访问需要从类路径或者相对于 `ServletContext` 的资源。虽然可以为特定的 	`URL` 前缀注册新的处理器（类似于目前用于注入 `http:` 前缀的处理器），但这通常非常复杂，并且 `URL` 接口仍然缺乏一些理想的功能，例如检查被指向的资源存在性。
 
-### [2.2. The Resource Interface](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-resource)
+## [2.2. The Resource Interface](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-resource)
 Spring 的 `Resource` 接口旨在成为一个用于抽象访问低级资源的更强大的接口。以下列举了 `Resource` 接口的定义：
 ```java
 public interface Resource extends InputStreamSource {
@@ -1995,24 +2035,24 @@ public interface InputStreamSource {
 
 其他方法可以让你获得代表资源的实际 `URL` 或者 `File` 对象（如果基础实现兼容且支持该功能）。
 
-### [2.3. Built-in Resource Implementations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-implementations)
+## [2.3. Built-in Resource Implementations](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-implementations)
 
-#### [2.3.1. UrlResource](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-implementations-urlresource)
+### [2.3.1. UrlResource](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-implementations-urlresource)
 `UrlResource` 包装了 `java.net.URL`。可以用于访问通常用 `URL` 访问的任何对象，例如文件、HTTP 目标、FTP 目标等。所有 URL 都有标准化的字符串表现形式，因此使用适当的标准化前缀来指示一种 URL 类型。这包括 `file:` 用于访问文件系统路径, `http:` 用于访问通过 HTTP 协议的资源, `ftp:` 用于访问通过 FTP 的资源等。
 
 `UrlResource` 由 Java 代码通过显式地使用 `UrlResource` 构造器创建，但是当你调用持有一个 `String` 参数标识路径的 API 方法时，通常会隐式地创建。对于后一种情况，Java Bean `PropertyEditor` 最终决定要创建哪种类型的资源。
 
 
-#### [2.3.2. ClassPathResource](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-implementations-classpathresource)
+### [2.3.2. ClassPathResource](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-implementations-classpathresource)
 
 
-#### [2.3.3. FileSystemResource](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-implementations-filesystemresource)
+### [2.3.3. FileSystemResource](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-implementations-filesystemresource)
 这是用于 `java.io.File` 和 `java.nio.file.Path` 处理的 `Resource` 实现。它支持以 `File` 和 `URL` 方式解析。
 
-#### [2.3.5. InputStreamResource](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-implementations-inputstreamresource)
+### [2.3.5. InputStreamResource](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-implementations-inputstreamresource)
 
 
-### [2.4. The `ResourceLoader`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-resourceloader)
+## [2.4. The `ResourceLoader`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-resourceloader)
 
 `ResourceLoader` 接口意味着由那些可以返回 `Resource` 实例的对象实现。下面的清单展示了 `ResourceLoader` 接口的定义：
 
@@ -2044,7 +2084,7 @@ Resource template = ctx.getResource("some/resource/path/myTemplate.txt");
 |http:|`https://myserver/logo.png`|以 `URL` 加载|
 |(none)|`/data/config.xml`|依赖于底层 `ApplicationContext`|
 
-#### [2.5. The `ResourceLoaderAware` interface](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-resourceloaderaware)
+### [2.5. The `ResourceLoaderAware` interface](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-resourceloaderaware)
 
 `ResourceLoaderAware` 接口是一个特殊的回调接口，它标识了那些期望提供以 `ResourceLoader` 接口的组件。下面的清单展示了 `ResourceLoaderAware` 接口的定义：
 
@@ -2056,10 +2096,10 @@ public interface ResourceLoaderAware {
 ```
 
 
-### [2.7. Application Contexts and Resource Paths](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-app-ctx)
+## [2.7. Application Contexts and Resource Paths](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-app-ctx)
 本节涵盖了如何使用资源创建应用上下文，包括与 XML 工作的快捷方式，如何使用通配符，以及其他细节。
 
-#### [2.7.1. Constructing Application Contexts](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-app-ctx-construction)
+### [2.7.1. Constructing Application Contexts](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-app-ctx-construction)
 `ApplicationContext` 的构造器通常将一个字符串或者字符串数组作为资源路径，例如构成上下文定义的 XML 文件。
 
 当这样的路径没有前缀时，将会从该路径构建特定的 `Resource` 类型，并用于加载依赖及适配于特定 Application Context 的 Bean Definition。例如，考虑以下示例，该示例创建 `ClassPathXmlApplicationContext`：
@@ -2079,7 +2119,7 @@ ApplicationContext ctx =
     new FileSystemXmlApplicationContext("classpath:conf/appContext.xml");
 ```
 
-##### [Constructing ClassPathXmlApplicationContext Instances — Shortcuts](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-app-ctx-classpathxml)
+#### [Constructing ClassPathXmlApplicationContext Instances — Shortcuts](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#resources-app-ctx-classpathxml)
 `ClassPathXmlApplicationContext` 暴露出许多构造器，以便于实例化应用上下文。基本思想是：你可以只提供一个字符串数组，该数组包含 XML 文件名（无前导路径信息），并提供一个 `Class`。然后，`ClassPathXmlApplicationContext` 就能从提供的 `Class` 中推断出路径信息。
 
 ```java
@@ -2091,7 +2131,7 @@ public ClassPathXmlApplicationContext(String path, Class<?> clazz) throws BeansE
 > 上述描述也就是根据当前类进行相对路径查找。
 
 
-## [3. Validation, Data Binding, and Type Conversion](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation)
+# [3. Validation, Data Binding, and Type Conversion](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation)
 Spring Boot 2.3 不再包含 validation，见 [github](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.3-Release-Notes#validation-starter-no-longer-included-in-web-starters)
 
 将校验视为业务逻辑有利也有弊，Spring 提供了一种用于校验（以及数据绑定）的设计，这并不会排除其中任何一个。具体而言，验证不应该与 Web 层绑定，并且应该容易本地化，且应该有可能插入任何可用的验证器。考虑到这些问题，Spring 提供了一个 `Validator` 约定，它在每个应用层都是即基础又高度可用。
@@ -2117,7 +2157,7 @@ public class UserController {
 	public HttpBody sendVerificationCode(@Valid @Email(message = "邮箱格式错误") @PathVariable String to) { }
 }
 ```
-### [3.1. Validation by Using Spring’s Validator Interface](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validator)
+## [3.1. Validation by Using Spring’s Validator Interface](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validator)
 Spring 提供了一个 `Validator` 接口，你可以用它来校验对象。`Validator` 接口通过使用 `Errors` 对象工作，以便在验证时，验证器可以将校验的失败报告给 `Errors` 对象。
 
 考虑如下的一个小型数据对象示例：
@@ -2205,10 +2245,10 @@ public class CustomerValidator implements Validator {
 ```
 
 
-### [3.2. Resolving Codes to Error Messages](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-conversion)
+## [3.2. Resolving Codes to Error Messages](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-conversion)
 我们讨论了数据绑定和验证。本节涵盖了于验证错误相关的输出消息。在上一章节的示例中，我们拒绝 `name` 和 `age` 字段。如果我们想使用 `MessageSource` 输出错误消息，则我们可以使用拒绝字段时提供的错误码来完成。当你调用 `rejectValue` 或者来自 `Errors` 接口的其他  `reject` 方法之一时，底层实现不仅仅会注册你传递的错误码，而且会注册许多额外的错误码。`MessageCodesResolver` 决定了 `Errors` 接口注册哪些错误码。默认地，使用 `DefaultMessageCodesResolver`，它不仅仅注册你赋予的错误码的消息，而且还会注册包含你传递给拒绝方法的字段名的消息。因此，如果你通过使用 `rejectValue("age", "too.darn.old")`
 
-### [3.3. Bean Manipulation and the BeanWrapper](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-beans)
+## [3.3. Bean Manipulation and the BeanWrapper](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-beans)
 `org.springframework.beans` 包遵循 Java Bean 标准。一个 Java Bean 是一个具有默认无参构造器，并且遵循命名约定的类，其中（举个例子）一个属性名为 `bingoMadness` 有一个 Setter 方法 `setBingoMadness(..)` 以及一个 Getter 方法 `getBingoMadness()`。有关 Java Bean 和规范的更多信息，参见 [javabeans](https://docs.oracle.com/javase/8/docs/api/java/beans/package-summary.html)
 
 
@@ -2217,7 +2257,7 @@ public class CustomerValidator implements Validator {
 `BeanWrapper` 的工作方式见名知意：它包装 Bean 在该 Bean 上执行操作，例如设置和检索属性。
 
 
-#### [3.3.1. Setting and Getting Basic and Nested Properties](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-beans-conventions)
+### [3.3.1. Setting and Getting Basic and Nested Properties](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#beans-beans-conventions)
 
 Set 和 Get 属性是通过 `BeanWrapper` 的重载方法变体 `setPropertyValue` 和 `getPropertyValue` 完成的。详细信息参见它们的 Javadoc。下表展示了这些约定的一些例子：
 
@@ -2299,15 +2339,15 @@ company.setPropertyValue("managingDirector", jim.getWrappedInstance());
 Float salary = (Float) company.getPropertyValue("managingDirector.salary");
 ```
 
-### [3.4. Spring Type Conversion](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#core-convert)
+## [3.4. Spring Type Conversion](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#core-convert)
 
 
-### [3.7. Java Bean Validation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation)
+## [3.7. Java Bean Validation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation)
 
 Spring Framework 为 Java Bean Validation API 提供了支持。
 
 
-#### [3.7.1. Overview of Bean Validation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation-overview)
+### [3.7.1. Overview of Bean Validation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation-overview)
 
 Bean Validation 通过约束声明和 Java 应用的元数据提供了一种通用的验证方式。要使用它，你可以用声明式验证约束注解域模型，之后这些约束在运行时会被强制执行。有内置的约束，你也可以定义你自己的自定义约束。
 
@@ -2337,7 +2377,7 @@ public class PersonForm {
 然后，Bean Validation validator 基于声明的约束验证该类实例。
 
 
-#### [3.7.2. Configuring a Bean Validation Provider](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation-spring)
+### [3.7.2. Configuring a Bean Validation Provider](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation-spring)
 
 Spring 为 Bean Validation API 提供了完全的支持，包括 Bean Validation provider 作为一个 Spring bean 的引导。这让你可以在你的应用任何需要验证的地方注入 `javax.validation.ValidatorFactory` 或者 `javax.validation.Validator`。
 
@@ -2356,7 +2396,7 @@ public class AppConfig {
 }
 ```
 
-##### [Injecting a Validator](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation-spring-inject)
+#### [Injecting a Validator](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation-spring-inject)
 
 `LocalValidatorFactoryBean` 实现了 `javax.validation.ValidatorFactory` 和 `javax.validation.Validator` 以及 Spring 的 `org.springframework.validation.Validator`。你可以注入这些接口中的任何一个到你需要调用校验逻辑的 Bean 中。
 
@@ -2373,7 +2413,7 @@ public class MyService {
 }
 ```
 
-##### [Configuring Custom Constraints](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation-spring-constraints)
+#### [Configuring Custom Constraints](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation-spring-constraints)
 
 每个 Bean 验证约束由两部分组成：
 
@@ -2381,21 +2421,21 @@ public class MyService {
 - `javax.validation.ConstraintValidator` 接口的实现类，实现了约束的行为
 
 
-##### [Spring-driven Method Validation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation-spring-method)
+#### [Spring-driven Method Validation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation-spring-method)
 
 
-##### [Additional Configuration Options](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation-spring-other)
+#### [Additional Configuration Options](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-beanvalidation-spring-other)
 
-#### [3.7.3. Configuring a `DataBinder`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-binder)
+### [3.7.3. Configuring a `DataBinder`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#validation-binder)
 
 
-## [4. Spring Expression Language (SpEL)](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#expressions)
+# [4. Spring Expression Language (SpEL)](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#expressions)
 
 Spring 表达式语言（简称 SpEL）是一种功能强大的表达式语言，支持在运行时查询和操作对象图。该语言的语法类似于 Unified EL，但提供了额外的特性、最显著的方法调用和基本字符串模板功能。
 
 虽然还有其他几种可用的 Java 表达式语言—— OGNL，MVEL，以及 JBoss EL，但仅举几个例子，创建 Spring 表达式语言是为了向 Spring 社区提供一种受良好支持的表达式语言，该语言可以在 Spring 产品组合中的所有产品中使用。它的语言特性是由 Spring 投资组合中的项目需求驱动的，包括在 Spring Tools For Eclipse 中队代码完成支持的工具需求。也就是说，SpEL 基于一种与技术无关的 API，它允许在需要时集成其他表达式语言实现。
 
-### [4.1. Evaluation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#expressions-evaluation)
+## [4.1. Evaluation](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#expressions-evaluation)
 
 本节介绍了 SpEL 接口及其表达式语言的简单使用。完整的语言参考可以在 [Language Reference](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#expressions-language-ref).
 
@@ -2416,7 +2456,7 @@ SpEL 支持广泛的特性
 
 
 
-## [5. Aspect Oriented Programming with Spring](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop)
+# [5. Aspect Oriented Programming with Spring](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop)
 面向切面编程（AOP）提供了另一种关于编程结构的思考方式，以对面向对象编程（OOP）进行补充。OOP 中关键的模块化单元是类，而 AOP 中，模块化单元是切面。切面使横跨多个类和对象切入的关注点（例如事务管理）模块化成为可能。（此类关注点通常在 AOP 的文献中称为“横切”关注点。）
 
 Spring 的关键组件之一就是 AOP 框架。尽管 Spring IoC 容器不依赖于 AOP（意味着，如果你不想用，你就不必使用 AOP），但是 AOP 补充了 Spring IoC，提供了一个功能强大的中间件解决方案。
@@ -2434,7 +2474,7 @@ AOP 在 Spring Framework 中能做什么：
 - 让用户实现自定义切面，用 AOP 补充他们的 OOP
 
 
-### [5.1. AOP Concepts](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-introduction-defn)
+## [5.1. AOP Concepts](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-introduction-defn)
 
 让我们通过定义一些核心 AOP 概念和术语开始。这些术语不是 Spring 特有的。不幸地是，AOP 术语不是特别直观。但是，如果 Spring 使用自己的术语，那将更加令人困惑。
 
@@ -2456,25 +2496,25 @@ Spring AOP 包括下面通知类型：
 - Around advice
 
 
-### [5.3. AOP Proxies](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-introduction-proxies)
+## [5.3. AOP Proxies](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-introduction-proxies)
 
 Spring AOP 默认使用标准 JDK 动态代理作为 AOP 代理。这使得可以代理任何接口（或者一组接口）。
 
 Spring AOP 也可以使用 CGLIB 代理，这对于代理一些类而非接口是很有必要的。默认地，如果业务对象没有实现接口，则使用 CGLIB。由于最好的实践是面向接口编程而非面向类编程，业务类通常实现一个或多个业务接口。当你需要通知一个未声明在任何接口的方法时，或者需要将代理对象作为固定类型传递给一个方法时，可以[强制使用 CGLIB](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-proxying)。
 
 
-### [5.4. @AspectJ support](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-ataspectj)
+## [5.4. @AspectJ support](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-ataspectj)
 
-#### [5.4.1. Enabling @AspectJ Support](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-aspectj-support)
+### [5.4.1. Enabling @AspectJ Support](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-aspectj-support)
 
 
-#### [5.4.2. Declaring an Aspect](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-at-aspectj)
+### [5.4.2. Declaring an Aspect](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-at-aspectj)
 启用 `@AspectJ` 支持之后，应用上下文定义的任何 bean 与 @Aspect 注解的类是由 Spring 自动检测，并用于配置 Spring AOP。
 
 与其他任何类相同，切面（使用 @Aspect 注解的类）可以拥有方法和字段。他们也可以包含切入点，通知，和介绍声明。
 
 
-#### [5.4.3. Declaring a Pointcut](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-pointcuts)
+### [5.4.3. Declaring a Pointcut](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-pointcuts)
 切入点可以确定感兴趣的连接点，从而让我们控制通知的运行时机。Spring AOP 仅仅支持方法 Spring bean 的方法执行连接点，因此你可以考虑 Spring bean 上的方法执行匹配的切入点。
 
 切入点的声明有两个部分：
@@ -2487,7 +2527,7 @@ Spring AOP 也可以使用 CGLIB 代理，这对于代理一些类而非接口�
 构成 `@Pointcut` 注解值的切入点表达式时常规的 AspectJ 5 切入点表达式。
 
 &nbsp;
-##### [Supported Pointcut Designators](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-pointcuts-designators)
+#### [Supported Pointcut Designators](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-pointcuts-designators)
 Spring AOP 支持以下 AspectJ 切入点指示符用于切入点表达式：
 
 - `execution`：用于匹配方法执行连接点。
@@ -2505,7 +2545,7 @@ Spring AOP 还支持一个名为 bean 的 PCD。该 PCD 允许你将连接点的
 
 
 &nbsp;
-##### [Combining Pointcut Expressions](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-pointcuts-combining)
+#### [Combining Pointcut Expressions](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-pointcuts-combining)
 你可以通过 `&&`, `||`, `!` 来组合切入点表达式。你也可以按名称引用切入点表达式。
 ```java
 @Pointcut("execution(public * *(..))")
@@ -2520,10 +2560,10 @@ private void tradingOperation() {}
 
 
 &nbsp;
-#### [5.4.4. Declaring Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-advice)
+### [5.4.4. Declaring Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-advice)
 通知和切入点表达式有关，然后在切入点匹配的方法 before，after 或者 around 执行。
 
-##### [Before Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-advice-before)
+#### [Before Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-advice-before)
 
 ```java
 @Aspect
@@ -2535,7 +2575,7 @@ public class BeforeExample {
 ```
 
 &nbsp;
-##### [After Returning Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-advice-after-returning)
+#### [After Returning Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-advice-after-returning)
 当匹配的方法执行正常返回时，After returning advice 将会执行。
 
 有时候，你需要在通知体里面访问实际的返回值。你可以使用 `@AfterReturning` 绑定返回值，如下：
@@ -2554,7 +2594,7 @@ public class AfterReturningExample {
 属性 `returning` 中的名称必须与通知方法的参数名称相匹配。当方法执行返回时，返回值会传递给通知方法中相关的参数。`returning` 还限制只能匹配那些特定类型的返回值（本例中，`Object` 匹配任何返回值）
 
 &nbsp;
-##### [After Throwing Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-advice-after-throwing)
+#### [After Throwing Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-advice-after-throwing)
 当匹配的方法以抛出异常的方式结束时，after throwing advice 会运行。
 
 
@@ -2575,14 +2615,14 @@ public class AfterThrowingExample {
 
 
 &nbsp;
-##### [After (Finally) Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-advice-after-finally)
+#### [After (Finally) Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-advice-after-finally)
 当匹配的方法执行退出时，After(finally) advice 会运行。通过 @After 注解声明。必须准备号 After 通知以处理正常和异常的返回条件。通常，它用于释放资源等。
 
 > **注意** @AfterThrowing 并不表示通用的异常处理。@AfterThrowing 通知方法仅仅应该从连接点接收异常，而不是从伴随的 `@After` / `@AfterReturning` 方法。
 
 
 &nbsp;
-##### [Around Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-ataspectj-around-advice)
+#### [Around Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-ataspectj-around-advice)
 环绕通知围绕着被匹配方法的执行。在方法执行前后，它均有机会工作，并确定何时，如何，甚至是否方法实际上是否要运行。如果你需要以线程安全的方式（例如，启动和停止计时器）在方法执行前后共享状态，通常需要时候 Around 通知。
 
 **官方建议** 总是使用功能最小的通知形式来满足需求，即，如果需要前置通知，那么就不用使用环绕通知。
@@ -2598,7 +2638,7 @@ public class AfterThrowingExample {
 **注意** 可以在 Around 通知体中调用一次，多次，或者不调用 `proceed()` 方法。这些都是合法的。
 
 
-##### [Access to the Current JoinPoint](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-ataspectj-advice-params-the-joinpoint)
+#### [Access to the Current JoinPoint](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-ataspectj-advice-params-the-joinpoint)
 任何的通知方法都可以声明 org.aspectj.lang.JoinPoint 类型参数，作为它的第一个参数。
 
 **注意** Around 通知需要声明第一个参数为 `ProceedingJoinPoint`，它时 `JoinPoint` 的子类。
