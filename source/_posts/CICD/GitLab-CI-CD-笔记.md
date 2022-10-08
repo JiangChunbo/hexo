@@ -15,7 +15,7 @@ https://docs.gitlab.com/ee/ci/yaml/#keywords
 
 
 ```bash
-docker run --rm -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitlab-runner register \
+docker run --add-host blog.jiangchunbo.com:192.168.59.59 --rm -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitlab-runner register \
     --non-interactive \
     --executor "docker" \
     --docker-image alpine:latest \
@@ -97,6 +97,62 @@ Groups > Settins > CI/CD
 ## Job keywords
 
 
+### <a id="after_script" href="https://docs.gitlab.com/ee/ci/yaml/#after_script">after_script</a>
+
+使用 `after_script` 定义在每个 job 之后运行的命令组，包括失败的 job。
+
+支持 CI/CD 变量。
+
+**`after_script` 实例**:
+
+```yml
+job:
+  script:
+    - echo "An example script section."
+  after_script:
+    - echo "Execute this command after the `script` section completes."
+```
+
+**更多细节**:
+在 `after_script` 中指定的脚本在新的 shell 中执行，与任何 `before_script` 或者 `script` 命令分开。因此，它们:
+
+- 将当前工作目录设置回默认值（根据定义 runner 如何处理 Git 请求的变量）
+
+- 无法访问 `before_script` 或者 `script` 命令所做出的更改，包括:
+
+    - 在 `script` 脚本中导出的命令别名以及变量
+
+    - 工作树之外的更改（取决于 runner 执行器），比如由 `before_script` 或者 `script` 脚本安装的软件。
+
+- 有一个单独的超时时间，硬编码为 5 分钟
+
+- 不影响 job 的退出码。如果 `script` 成功，`after_script` 超时或者失败，那么 job 以 0 作为退出码（job 成功）。
+
+如果作业超时或被取消，则不执行 `after_script` 命令。
+
+### <a id="before_script" href="https://docs.gitlab.com/ee/ci/yaml/#before_script">before_script</a>
+
+使用 `before_script` 定义一个命令组，这个命令组应该在每个 job 的 `script` 命令之前运行，但是在 artifacts 恢复之后。
+
+
+
+支持 CI/CD 变量。
+
+**`before_script` 的例子**:
+
+```yml
+job:
+  before_script:
+    - echo "Execute this command before any 'script:' commands."
+  script:
+    - echo "This command executes after the job's 'before_script' commands."
+```
+
+**更多细节**:
+
+- 你在 `before_script` 中指定的脚本与你在主要的 `script` 中指定的任何脚本连接在一起。组合起来的脚本在一个 shell 中一起执行。
+
+- 在顶层而非 `default` 域使用 `before_script`，这是不建议的
 
 ### <a id="cache" href="https://docs.gitlab.com/ee/ci/yaml/#cache">cache</a>
 
@@ -110,16 +166,25 @@ Groups > Settins > CI/CD
 使用 `image` 指定 job 运行所在的 Docker 镜像
 
 
-### <a id="only/except" href="https://docs.gitlab.com/ee/ci/yaml/#only--except">only / except</span>
+### <a id="only/except" href="https://docs.gitlab.com/ee/ci/yaml/#only--except">only\/except</a>
 
-### <span id="retry">retry</span>
+### <a id="retry">retry</a>
 
 
-### <span id="tags" href="https://docs.gitlab.com/ee/ci/yaml/#tags">tags</span>
+### <a id="tags" href="https://docs.gitlab.com/ee/ci/yaml/#tags">tags</a>
 
 使用 `tags` 可以从项目可用的所有 runner 中选择特定的运行程序
 
 当你注册运行 runner 时，你可以指定 runner 的 `tags`，例如 `ruby`，`postgres`，或者 `development`。要选择并运行一个 job，runner 必须为作业中列出的每个标记分配一个 runner。
 
+**`tags` 的例子**:
 
-### <span id="when" href="https://docs.gitlab.com/ee/ci/yaml/#when">when</span>
+```yml
+job:
+  tags:
+    - ruby
+    - postgres
+```
+
+
+### <a id="when" href="https://docs.gitlab.com/ee/ci/yaml/#when">when</a>
