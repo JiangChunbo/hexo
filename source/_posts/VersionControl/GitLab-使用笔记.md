@@ -7,6 +7,8 @@ tags:
 
 # 参考文档
 
+https://docs.gitlab.com/runner/register/
+
 https://docs.gitlab.com/ee/ci/yaml/gitlab_ci_yaml.html
 
 # Docker 安装

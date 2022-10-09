@@ -16,24 +16,44 @@ https://docs.gitlab.com/ee/ci/yaml/#keywords
 
 
 ```bash
-docker run --add-host blog.jiangchunbo.com:192.168.59.59 --rm -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitlab-runner register \
+docker run --rm -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitlab-runner register \
     --non-interactive \
     --executor "docker" \
     --docker-image alpine:latest \
-    --url "http://192.168.59.59" \
+    --url "http://192.168.101.101" \
     --registration-token "FNc7eS247zHfjLgugiw4" \
-    --description "first-register-runner" \
-    --tag-list "test-cicd,dockercicd" \
+    --description "gitlab-runner" \
+    --tag-list "docker-ci-cd" \
     --run-untagged="true" \
     --locked="true" \
     --access-level="not_protected"
 ```
 
 
-如果出现主机名无法解析的情况，编辑 `/etc/gitlab-runner/config.toml`，在 `[runners]` 节点下面的 `[runners.docker]` 增加配置:
+
+如果出现执行器 `executor=docker` 主机名无法解析的情况，编辑 `/etc/gitlab-runner/config.toml`，在 `[runners.docker]` 增加配置:
 
 ```
 extra_hosts = ["主机名:IP"]
+```
+
+
+- 查询 Runner
+
+```bash
+gitlab-runner list
+```
+
+
+- 删除 Runner
+
+如果在 GitLab 中删除了 Runner，还需要在 GitLab Runner 中继续删除:
+
+```bash
+# 删除所有的，跳过激活状态的
+gitlab-runner verify --delete
+# 删除指定 name
+gitlab-runner verify --delete --name xxx
 ```
 
 
@@ -197,3 +217,15 @@ job:
 
 
 ### <a id="when" href="https://docs.gitlab.com/ee/ci/yaml/#when">when</a>
+
+使用 `when` 配置作业运行时的条件。如果未在作业中定义，则默认值为 `on_success`。
+
+
+**可能的输入**:
+
+- `on_success`（默认值）: 只有在早期阶段的所有作业都成功或者具有 `allow_failure: true` 时才运行。
+- `manual`: 只有在手动触发时才运行作业。
+- `always`: 不管作业在早期状态如何，都运行作业。也可以在 `workflow:rules` 中使用。
+- `on_failure`: 只有在早期阶段中至少有一个作业失败时才运行该作业。
+- `delayed`: 在指定的期限内延迟作业的执行。
+- `never`: 不运行此作业。只能在 `rules` 部分或者 `workflow: rules` 中使用。
