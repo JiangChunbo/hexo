@@ -4,8 +4,24 @@ date: 2022-08-16 18:00:58
 tags:
 ---
 
-# MyBatis Generator 笔记
+# 参考引用
 
+http://mybatis.org/generator/
+
+
+## 依赖
+
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-maven-plugin</artifactId>
+            <version>1.3.7</version>
+        </plugin>
+    <plugins>    
+</build>
+```
 
 ## XML 配置参考
 
@@ -39,6 +55,19 @@ tags:
 - endingDelimiter
 
 
+### `<commentGenerator>`
+
+- suppressAllComments
+此属性用于指定 MBG 是否在生成的代码中包含任何注释。
+
+- suppressDate
+此属性用于指定 MBG 是否将生成的时间戳在生成的注释中包括。
+
+- addRemarkComments
+此属性用于指定 MBG 是否将在生成的注释中包含来自 db 表的表备注和列备注。
+
+> 警告: 如果 `suppressAllComments` 选项为 true，那么该选项会被忽略。即，该选项优先级比较低。
+
 ### `<javaClientGenerator>` 元素
 
 `<javaClientGenerator>` 元素用于定义 Java 客户端生成器的属性。
@@ -66,6 +95,15 @@ tags:
 
 这用于为生成的接口和类指定目标项目。
 
+
+#### 可选
+
+- enableSubPackages
+该属性用于选择 MyBatis Generator 是否将基于内置表的 catelog 和 schema 为对象生成不同的 Java 包。
+
+
+
+
 ### `<javaModelGenerator>` 元素
 
 `<javaModelGenerator>` 元素用于定义 Java 模型生成器的属性。Java 模型生成器构建主键类，记录类，以及与自省表匹配的按照 Example 类查询。该元素是 `<context>` 元素必须的子元素。
@@ -80,6 +118,37 @@ tags:
 
 这用于为生成的对象指定目标项目。在 Eclipse 环境中运行时，这将会指定保存对象的项目和源文件夹。在其他环境中，该值应该是本地文件系统上的已经存在的目录。如果此目录不存在， MyBatis Generator 将不会创建此目录。
 
+
+#### 可选
+
+- enableSubPackages
+
+该属性用于选择 MyBatis Generator 是否将基于内置表的 catelog 和 schema 为对象生成不同的 Java 包。
+
+> 建议: false
+
+
+- trimStrings
+该属性用于选择 MyBatis Generator 是否添加代码以修剪从数据库返回的字符字段的空白。
+
+> 建议: true。尽管说数据库设计出现空白字符应该是一种设计失误。
+
+
+
+### `<properties>`
+
+`<properties>` 元素用于指定用于解析配置的外部属性文件。配置中的任何属性都将接受以 `${property}` 格式的属性。
+
+
+`<properties>` 元素是 `<generatorConfiguration>` 元素的子元素。
+
+#### 必须的属性
+
+- resource
+属性文件的完全限定名称
+
+- url
+用于属性文件的 URL 值
 
 ## 使用方式
 
