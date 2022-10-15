@@ -5,7 +5,75 @@ tags:
 ---
 
 
-# 更多使用方式
+# Maven 使用方式
+
+## Maven 插件配置
+
+```xml
+<plugin>
+    <groupId>org.mybatis.generator</groupId>
+    <artifactId>mybatis-generator-maven-plugin</artifactId>
+    <version>1.4.1</version>
+</plugin>
+```
+
+在连续构建环境中，你可能希望自动执行 MBG 作为 Maven 构建的一部分。这可以通过将 goal 配置为自动执行来实现。
+
+```xml
+<plugin>
+    <groupId>org.mybatis.generator</groupId>
+    <artifactId>mybatis-generator-maven-plugin</artifactId>
+    <version>1.4.1</version>
+    <executions>
+        <execution>
+            <id>Generate MyBatis Artifacts</id>
+            <goals>
+            <goal>generate</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+如果你需要向插件的类路径添加一些东西（例如，JDBC 驱动程序），你可以通过向插件配置中添加依赖项来完成：
+
+```xml
+<plugin>
+    <groupId>org.mybatis.generator</groupId>
+    <artifactId>mybatis-generator-maven-plugin</artifactId>
+    <version>1.4.1</version>
+    <executions>
+        <execution>
+            <id>Generate MyBatis Artifacts</id>
+            <goals>
+            <goal>generate</goal>
+            </goals>
+        </execution>
+    </executions>
+    <dependencies>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.3.4</version>
+        </dependency>
+    </dependencies>
+</plugin>
+```
+
+
+
+## `<properties>`
+
+使用 `<properties>` 可以将属性定义在外部文件.
+
+
+```properties
+target-project=src/main/java
+driver-class=com.mysql.cj.jdbc.Driver
+connection-url=jdbc:mysql://localhost:3306/self_building?characterEncoding=utf8&serverTimezone=UTC
+user-id=root
+password=
+```
 
 如果需要自定义生成文件名，则需要自定义插件:
 
@@ -62,13 +130,7 @@ tags:
 
 # MySQL
 
-```properties
-target-project=src/main/java
-driver-class=com.mysql.cj.jdbc.Driver
-connection-url=jdbc:mysql://localhost:3306/self_building?characterEncoding=utf8&serverTimezone=UTC
-user-id=root
-password=
-```
+
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
