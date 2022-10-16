@@ -62,11 +62,20 @@ tags:
 
 # MySQL
 
+
+## 参考配置
+
 ```properties
-target-project=src/main/java
-driver-class=com.mysql.cj.jdbc.Driver
-connection-url=jdbc:mysql://localhost:3306/self_building?characterEncoding=utf8&serverTimezone=UTC
-user-id=root
+# java 根路径，可以是相对路径
+java-path=D:/svn_repository/project/iorder-saas/trunk/application/dingzhi_jiashibo/src/main/java
+# resource 路径，可以是相对路径
+resource-path=D:/svn_repository/project/iorder-saas/trunk/application/dingzhi_jiashibo/src/main/resources
+model-package=
+mapper-package=
+mapper-xml-package=
+driver-class=org.postgresql.Driver
+connection-url=jdbc:postgresql://127.0.0.1:5432/postgres
+user-id=
 password=
 ```
 
@@ -128,8 +137,82 @@ password=
 
 # PostGreSQL
 
+## 参考配置
 
-# 插件汇总
+```properties
+# java 根路径，可以是相对路径
+java-path=D:/svn_repository/project/iorder-saas/trunk/application/dingzhi_jiashibo/src/main/java
+# resource 路径，可以是相对路径
+resource-path=D:/svn_repository/project/iorder-saas/trunk/application/dingzhi_jiashibo/src/main/resources
+model-package=
+mapper-package=
+mapper-xml-package=
+driver-class=org.postgresql.Driver
+connection-url=jdbc:postgresql://127.0.0.1:5432/postgres
+user-id=
+password=
+```
+
+```xml
+<generatorConfiguration>
+    <properties resource="generatorConfig.properties"/>
+
+    <context id="myContext" targetRuntime="MyBatis3">
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <!--<plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>-->
+        <plugin type="com.jiangchunbo.RenameXmlMapperPlugin"/>
+        <plugin type="com.jiangchunbo.LombokModelPlugin"/>
+
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection
+                driverClass="${driver-class}"
+                connectionURL="${connection-url}"
+                userId="${user-id}"
+                password="${password}">
+            <property name="useInformationSchema" value="true"/>
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="${model-package}" targetProject="${java-path}">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="${mapper-xml-package}" targetProject="${resource-path}">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="${mapper-package}" targetProject="${java-path}">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table tableName="jsb_asset_install_assessment" domainObjectName="JsbAssetInstallAssessment"
+               enableInsert="true"
+               enableSelectByPrimaryKey="true"
+               enableUpdateByPrimaryKey="true"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"
+        />
+    </context>
+</generatorConfiguration>
+```
+
+
+# 自定义插件
 
 ## XmlMapper
 
@@ -164,7 +247,7 @@ public class RenameXmlMapperPlugin extends PluginAdapter {
 ```
 
 
-## 使用 Lombok 生成数据库对象
+## 基于 Lombok 的 DO 对象
 
 > 如果你的数据库字段名为单字母开头，如: `e_sales`，那么 MBG 生成的 Getter Setter 将会是 geteSales 和 seteSales，这比较奇怪，用 Lombok 替换可以替换为 getESales 和 setESales
 
