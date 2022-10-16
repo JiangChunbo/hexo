@@ -131,7 +131,6 @@ password=
 # MySQL
 
 
-<<<<<<< HEAD
 ## 参考配置
 
 ```properties
@@ -147,8 +146,7 @@ connection-url=jdbc:postgresql://127.0.0.1:5432/postgres
 user-id=
 password=
 ```
-=======
->>>>>>> 74889c3d10625dc7f5ab0cab7cd6e720924c0730
+
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
