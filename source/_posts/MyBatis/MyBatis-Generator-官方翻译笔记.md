@@ -27,7 +27,7 @@ http://mybatis.org/generator/
 
 ## `<context>`
 
-`<context>` 元素用于指定生成一组对象的环境。
+`<context>` 元素用于指定生成一组对象的环境。可以在 `<generatorConfiguration>` 元素中列出多个 `<context>` 元素，以允许在同一次运行 MyBatis Generator（MBG）中从不同的数据库或使用不同的生成参数生成对象。
 
 ### Required Attributes
 
@@ -47,6 +47,11 @@ http://mybatis.org/generator/
 该属性用于生成代码的运行时目标。
 
 **MyBatisDynamicSql**
+
+**MyBatis3** 使用该值，MBG 将生成与 MyBatis 3.0+，JSE 5.0+ 兼容的对象。这些生成的对象中的 "by example" 方法实际上支持无限制的动态 where 字句。此外，这些生成器生成的 Java 对象支持许多 JSE 5.0 特性，包括参数化类型和注解。
+
+
+**MyBatis3Simple** 使用该值，MBG 将生成与 MyBatis 3.0+，JSE 5.0+ 兼容的对象。这个目标运行时生成的映射程序时非常基本的 CRUD 操作，只不过没有 "by example" 以及没有动态 SQL。这些生成器生成的 Java 对象支持许多 JSE 5.0 特性，包括参数化类型和注解。
 
 
 ### Supported Properties
