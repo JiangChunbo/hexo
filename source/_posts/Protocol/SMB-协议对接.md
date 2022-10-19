@@ -57,6 +57,28 @@ smb: \> cd DMS_Input_DistAndShop_CIB
 yum install samba-client
 ```
 
+
+- 下载
+
+```bash
+get xx
+mget xx
+mget xx
+```
+
+- 上传
+
+关闭提示，这样可以在选择多个文件上传、下载的时候不会提示是否确认的信息。
+
+```bash
+prompt off
+```
+
+```bash
+mput abc.txt
+mput abc*.txt
+```
+
 ## 其他
 
 
