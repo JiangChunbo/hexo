@@ -5,8 +5,17 @@ tags:
 ---
 
 
-类相关
+# Code
 
 |快捷键|含义|
 |-|-|
-|ctrl+o|查看当前类的字段和方法。再按一次 o，显示父类|
+|Ctrl + Shift + F|Reformat Code 格式化代码|
+|Ctrl + Shift + O|Optimize Imports 优化导入，可以去除没有使用的导入|
+
+
+
+# 索引
+
+|快捷键|含义|
+|-|-|
+|Ctrl + O|查看当前类的字段和方法。再按一次 o，显示父类|
