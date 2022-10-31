@@ -352,7 +352,7 @@ public class LombokModelPlugin extends PluginAdapter {
 
 - 字段名和关键字冲突问题
 
-配置界定符
+配置界定符，MySQL 的界定符是 `` ` ``
 
 ```xml
 <property name="beginningDelimiter" value="`"></property >
@@ -363,8 +363,30 @@ public class LombokModelPlugin extends PluginAdapter {
 
 
 
-- Mapper XML 文件覆盖
+- UnmergeableXmlMappersPlugin
+
+如果配置了该插件，MBG 的合并将会失效。如果 overwrite 为 true，那么会覆盖源文件！如果为 false，将会生成新文件（不包含原来自定义的节点）。
+
+> 根据一些特定的注解识别是否需要覆盖。
 
 ```xml
 <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
 ```
+
+
+- overwrite 和 mergeable
+
+是否合并 XML 文件，通过属性 `org.mybatis.generator.api.GeneratedXmlFile#isMergeable` 表示。是否合并也可以理解为是否使用同一个文件。
+
+当配置了 `<overwrite>false</overwrite>`
+
+- 如果 `mergeable=true` 合并，那么不会起作用
+- 如果 `mergeable=false` 不合并，那么会生成新文件。之前的文件保留，但是后续需要自己做合并与删除。
+
+当配置了 `<overwrite>true</overwrite>`
+
+- 如果 `mergeable=true` 合并，那么会追加 XML 节点，保留原来的节点。这样会产生许多重复 id 的节点。
+- 如果 `mergeable=false` 不合并，那么会覆盖已经存在的 XML 文件。导致原来的内容覆盖丢失。
+
+
+如果配置了 `overwrite=true`，那么在不合并模式下，会覆盖 XML Mapper 文件。
