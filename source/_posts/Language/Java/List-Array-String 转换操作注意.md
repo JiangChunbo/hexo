@@ -13,5 +13,17 @@ String: 通常使用 String 类型表示多元素，一般可能考虑界定符�
 假设有一个字符串标识一组 ID，名称为 `ids`，
 
 ```java
-Arrays.stream(ids.split(","))
+String[] idArray = ids.split(",");
+```
+
+> 注意，`ids` 如果为空字符串，会得到一个包含空字符的数组。因此可能需要判断是否为空。
+
+```java
+String[] idArray = ids != null && ids.trim().length() > 0 ? ids.split(",") : new String[0];
+```
+
+如果还希望转换为 `Integer[]` 或者 `Long[]` 等:
+l
+```java
+Arrays.stream(idArray).map(Integer::parseInt).toArray(Integer[]::new)
 ```
