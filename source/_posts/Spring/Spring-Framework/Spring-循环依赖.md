@@ -220,3 +220,11 @@ beanB 此时还没有创建，因此不会存在于 `singletonObjects` ，而且
 
 
 13. 回到 beanA 填充属性，将得到的 beanB 填充进自己的属性。接着，beanA 完成了自己的属性填充就可以将对象添加到 `singletonObjects` 中，并且移除 `singletonFactories` 和 `earlySingletonObjects` 相关的对象
+
+
+# 应用
+
+- 自己依赖自己
+
+
+被依赖的自己会受到增强（cglib），但是属性并不会注入。

@@ -128,157 +128,17 @@ password=
 
 
 
-# MySQL
+# Eclipse 插件
+
+Eclipse Market 下载 MyBatis Generator，一般版本跟随 MyBatis Generator。
+
+安装完插件之后：
+
+- 你可以右键新建 `MyBatis Generator Configuration File`。
+- 你可以右键 `generatorConfig.xml` > `Run As` > `1 Run MyBatis Generator` 执行
 
 
-## 参考配置
 
-```properties
-# java 根路径，可以是相对路径
-java-path=D:/svn_repository/project/iorder-saas/trunk/application/dingzhi_jiashibo/src/main/java
-# resource 路径，可以是相对路径
-resource-path=D:/svn_repository/project/iorder-saas/trunk/application/dingzhi_jiashibo/src/main/resources
-model-package=
-mapper-package=
-mapper-xml-package=
-driver-class=org.postgresql.Driver
-connection-url=jdbc:postgresql://127.0.0.1:5432/postgres
-user-id=
-password=
-```
-
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE generatorConfiguration
-        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
-        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
-<generatorConfiguration>
-    <properties resource="generatorConfig.properties"/>
-
-    <context id="myContext" targetRuntime="MyBatis3Simple">
-        <property name="beginningDelimiter" value="`"/>
-        <property name="endingDelimiter" value="`"/>
-
-        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
-
-        <commentGenerator>
-            <property name="suppressDate" value="true"/>
-            <property name="suppressAllComments" value="true"/>
-            <property name="addRemarkComments" value="true"/>
-        </commentGenerator>
-
-        <jdbcConnection
-                driverClass="${driver-class}"
-                connectionURL="${connection-url}"
-                userId="${user-id}"
-                password="${password}">
-            <property name="useInformationSchema" value="true"/>
-        </jdbcConnection>
-
-        <javaTypeResolver>
-            <property name="forceBigDecimals" value="false"/>
-        </javaTypeResolver>
-
-        <javaModelGenerator targetPackage="model" targetProject="${target-project}">
-            <property name="enableSubPackages" value="true"/>
-            <property name="trimStrings" value="true"/>
-        </javaModelGenerator>
-
-        <sqlMapGenerator targetPackage="mapper" targetProject="${target-project}">
-            <property name="enableSubPackages" value="true"/>
-        </sqlMapGenerator>
-
-        <javaClientGenerator type="XMLMAPPER" targetPackage="mapper" targetProject="${target-project}">
-            <property name="enableSubPackages" value="true"/>
-        </javaClientGenerator>
-
-        <!-- tableName：数据库中的表名或视图名；domainObjectName：生成的实体类的类名-->
-        <table tableName="app" domainObjectName="App"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"/>
-    </context>
-</generatorConfiguration>
-```
-
-# PostGreSQL
-
-## 参考配置
-
-```properties
-# java 根路径，可以是相对路径
-java-path=D:/svn_repository/project/iorder-saas/trunk/application/dingzhi_jiashibo/src/main/java
-# resource 路径，可以是相对路径
-resource-path=D:/svn_repository/project/iorder-saas/trunk/application/dingzhi_jiashibo/src/main/resources
-model-package=
-mapper-package=
-mapper-xml-package=
-driver-class=org.postgresql.Driver
-connection-url=jdbc:postgresql://127.0.0.1:5432/postgres
-user-id=
-password=
-```
-
-```xml
-<generatorConfiguration>
-    <properties resource="generatorConfig.properties"/>
-
-    <context id="myContext" targetRuntime="MyBatis3">
-        <property name="beginningDelimiter" value="`"/>
-        <property name="endingDelimiter" value="`"/>
-
-        <!--<plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>-->
-        <plugin type="com.jiangchunbo.RenameXmlMapperPlugin"/>
-        <plugin type="com.jiangchunbo.LombokModelPlugin"/>
-
-        <commentGenerator>
-            <property name="suppressDate" value="true"/>
-            <property name="suppressAllComments" value="true"/>
-            <property name="addRemarkComments" value="true"/>
-        </commentGenerator>
-
-        <jdbcConnection
-                driverClass="${driver-class}"
-                connectionURL="${connection-url}"
-                userId="${user-id}"
-                password="${password}">
-            <property name="useInformationSchema" value="true"/>
-        </jdbcConnection>
-
-        <javaTypeResolver>
-            <property name="forceBigDecimals" value="false"/>
-        </javaTypeResolver>
-
-        <javaModelGenerator targetPackage="${model-package}" targetProject="${java-path}">
-            <property name="enableSubPackages" value="true"/>
-            <property name="trimStrings" value="true"/>
-        </javaModelGenerator>
-
-        <sqlMapGenerator targetPackage="${mapper-xml-package}" targetProject="${resource-path}">
-            <property name="enableSubPackages" value="true"/>
-        </sqlMapGenerator>
-
-        <javaClientGenerator type="XMLMAPPER" targetPackage="${mapper-package}" targetProject="${java-path}">
-            <property name="enableSubPackages" value="true"/>
-        </javaClientGenerator>
-
-        <table tableName="jsb_asset_install_assessment" domainObjectName="JsbAssetInstallAssessment"
-               enableInsert="true"
-               enableSelectByPrimaryKey="true"
-               enableUpdateByPrimaryKey="true"
-               enableDeleteByPrimaryKey="false"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"
-        />
-    </context>
-</generatorConfiguration>
-```
 
 
 # 自定义插件
