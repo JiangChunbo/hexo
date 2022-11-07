@@ -14,6 +14,15 @@ BigDecimal big = new BigDecimal("2.3513");
 ```
 
 
+## 将字符串与 0 进行比较
+
+```java
+new BigDecimal(reportFormListItem.getApplyCostRadio()).compareTo(BigDecimal.ZERO) == 0)
+```
+
+如果使用 `equals` 方法比较 `"0.0"` 和 `"0"`，将返回 false
+
+
 ## 保留小数
 
 一般比较建议使用枚举类型传参:
