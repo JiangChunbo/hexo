@@ -2507,11 +2507,66 @@ Spring AOP 也可以使用 CGLIB 代理，这对于代理一些类而非接口�
 
 ### [5.4.1. Enabling @AspectJ Support](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-aspectj-support)
 
+要在 Spring 配置中使用 @AspectJ 切面，你需要启用 Spring 支持，以基于 @AspectJ 切面配置 Spring AOP，并根据 Bean 是否被这些切面增强而自动代理。通过自动代理，我们的意思是，如果 Spring 确定某个 Bean 被一个或多个切面增强，它会自动为该 Bean 生成一个代理来拦截方法调用，并确保增强按需运行。 
+
+可以通过 XML 或者 Java 风格配置启用 @AspectJ 支持。在这两种情况下，你还需要确保 AspectJ 的 `aspectjweaver.jar` 库在应用程序（版本 1.8 及以上）的类路径下。这个库可以在 AspectJ 发行版的 `lib` 目录或者 Maven 中央仓库找到。
+
+
+#### [Enabling @AspectJ Support with Java Configuration](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-enable-aspectj-java)
+
+要使用 Java `@Configuration` 启用 @Aspect 支持，添加 `@EnabloeAspectJAutoProxy` 注解，如下面的示例所示: 
+
+```java
+@Configuration
+@EnableAspectJAutoProxy
+public class AppConfig {
+
+}
+```
+
+
+#### [Enabling @AspectJ Support with XML Configuration](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-enable-aspectj-xml)
+
+要通过基于 XML 的配置启用 @Aspect 支持，使用 `aop:aspectj-autoproxy` 元素，如下面的示例所示: 
+```xml
+<aop:aspectj-autoproxy/>
+```
+这假设你使用模式支持，正如 XML 基于模式配置中描述的那样。有关如何导入 `aop` 命名空间中的标记，请参见 [the AOP schema](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#xsd-schemas-aop)。
 
 ### [5.4.2. Declaring an Aspect](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-at-aspectj)
-启用 `@AspectJ` 支持之后，应用上下文定义的任何 bean 与 @Aspect 注解的类是由 Spring 自动检测，并用于配置 Spring AOP。
+启用 `@AspectJ` 支持之后，Spring 会自动检测在应用上下文定义的具有 @Aspect 切面（有 `@Aspect` 注解）类的任何 Bean，并用于配置 Spring AOP。接下来两个例子展示了一个不是特别有用的切面的所需要的最小定义。
 
-与其他任何类相同，切面（使用 @Aspect 注解的类）可以拥有方法和字段。他们也可以包含切入点，通知，和介绍声明。
+这两个示例中的第一个展示了应用上下文中的一个常规的 Bean 定义，它指向一个具有 `@Aspect` 注解的 Bean 类型。
+
+```xml
+<bean id="myAspect" class="org.xyz.NotVeryUsefulAspect">
+    <!-- configure properties of the aspect here -->
+</bean>
+```
+
+
+这两个示例中的第二个示例展示了 `NotVeryUsefulAspect` 类型的定义，该定义使用 `org.aspectj.lang.annotation.Aspect` 注解;
+
+```java
+package org.xyz;
+import org.aspectj.lang.annotation.Aspect;
+
+@Aspect
+public class NotVeryUsefulAspect {
+
+}
+```
+
+与任何其他类相同，切面（使用 `@Aspect` 注解的类）可以有方法和字段。他们也可以包含切点，通知，和引入（类型间）声明。
+
+
+> <strong>通过组件扫描自动检测切面</strong>
+> 你可以将切面类注册为 Spring XML 配置中常规的 Bean，或者通过类路径扫描自动检测它们——与任何其他 Spring 管理的 Bean 相同。但是，注意 `@Aspect` 注解不足以在类路径中进行自动检测。为此，你需要添加一个单独的 `@Component` 注解（或者，根据 Spring 组件扫描器的规则，添加一个符合条件的自定义原型注解）。
+
+
+> <strong>用其他切面增强切面?</strong>
+> 在 Spring AOP 中，切面本身不能成为来自其他切面的增强目标。类上的 `@Aspect` 注解将其标记为切面，因此，将其排除在自动代理之外。
+
 
 
 ### [5.4.3. Declaring a Pointcut](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-pointcuts)
@@ -2526,7 +2581,7 @@ Spring AOP 也可以使用 CGLIB 代理，这对于代理一些类而非接口�
 
 构成 `@Pointcut` 注解值的切入点表达式时常规的 AspectJ 5 切入点表达式。
 
-&nbsp;
+
 #### [Supported Pointcut Designators](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-pointcuts-designators)
 Spring AOP 支持以下 AspectJ 切入点指示符用于切入点表达式：
 
@@ -2544,7 +2599,6 @@ Spring AOP 支持以下 AspectJ 切入点指示符用于切入点表达式：
 Spring AOP 还支持一个名为 bean 的 PCD。该 PCD 允许你将连接点的匹配限定为特定名称的 Spring bean 或者一组名称的 Spring bean（使用通配符）。
 
 
-&nbsp;
 #### [Combining Pointcut Expressions](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-pointcuts-combining)
 你可以通过 `&&`, `||`, `!` 来组合切入点表达式。你也可以按名称引用切入点表达式。
 ```java
@@ -2559,7 +2613,6 @@ private void tradingOperation() {}
 ```
 
 
-&nbsp;
 ### [5.4.4. Declaring Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-advice)
 通知和切入点表达式有关，然后在切入点匹配的方法 before，after 或者 around 执行。
 
@@ -2574,7 +2627,6 @@ public class BeforeExample {
 }
 ```
 
-&nbsp;
 #### [After Returning Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-advice-after-returning)
 当匹配的方法执行正常返回时，After returning advice 将会执行。
 
@@ -2593,7 +2645,7 @@ public class AfterReturningExample {
 ```
 属性 `returning` 中的名称必须与通知方法的参数名称相匹配。当方法执行返回时，返回值会传递给通知方法中相关的参数。`returning` 还限制只能匹配那些特定类型的返回值（本例中，`Object` 匹配任何返回值）
 
-&nbsp;
+
 #### [After Throwing Advice](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-advice-after-throwing)
 当匹配的方法以抛出异常的方式结束时，after throwing advice 会运行。
 
@@ -2638,15 +2690,13 @@ public class AfterThrowingExample {
 **注意** 可以在 Around 通知体中调用一次，多次，或者不调用 `proceed()` 方法。这些都是合法的。
 
 
-#### [Access to the Current JoinPoint](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-ataspectj-advice-params-the-joinpoint)
-任何的通知方法都可以声明 org.aspectj.lang.JoinPoint 类型参数，作为它的第一个参数。
+#### [Access to the Current `JoinPoint`](https://docs.spring.io/spring-framework/docs/5.2.17.RELEASE/spring-framework-reference/core.html#aop-ataspectj-advice-params-the-joinpoint)
+任何的通知方法都可以将 `org.aspectj.lang.JoinPoint` 类型的参数声明为其第一个参数（注意，around 通知需要声明第一个参数类型为 `ProceedingJoinPoint`，它是 `JoinPoint` 的子类）。`JoinPoint` 接口提供了许多有用的方法：
 
-**注意** Around 通知需要声明第一个参数为 `ProceedingJoinPoint`，它时 `JoinPoint` 的子类。
+- `getArgs()`：返回方法参数
+- `getThis()`：返回代理对象
+- `getTarget`：返回目标对象
+- `getSignature`：返回被通知方法的描述
+- `toString()`：打印被通知方法的有用描述
 
-JoinPoint 接口提供了许多有用的方法：
-
-- `getArgs():Object[]`：返回方法参数
-- `getThis():Object`：返回代理对象
-- `getTarget():Object`：返回目标对象
-- `getSignature():Signature`：返回被通知方法的描述
-- `toString():String`：打印被通知方法的有用描述
+有关更多细节，请参见 [javadoc](https://www.eclipse.org/aspectj/doc/released/runtime-api/org/aspectj/lang/JoinPoint.html)。
