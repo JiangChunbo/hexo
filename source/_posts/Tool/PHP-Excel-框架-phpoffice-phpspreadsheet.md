@@ -4,8 +4,11 @@ date: 2022-11-15 13:16:22
 tags:
 ---
 
-# PHP
-## 1. composer 依赖
+# phpoffice/phpspreadsheet
+
+[https://github.com/PHPOffice/PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet)
+
+# 1. composer 依赖
 
 通过 composer 导入相关依赖
 ```bash
@@ -19,7 +22,7 @@ composer require phpoffice/phpspreadsheet
 ```
 
 
-## 2. 读取 Excel 步骤
+# 2. 读取 Excel 步骤
 ```php
 $filename='';
 // 创建 Reader
@@ -32,16 +35,16 @@ $reader->setReadDataOnly(true);
 $spreadsheet = $reader->load($filename);
 ```
 
-## 3. 相关类
-### Spreadsheet
+# 3. 相关类
+## Spreadsheet
 |函数|描述|应用|
 |:---|:---|:---|
 |getActiveSheet()|获得活跃的工作簿|
 |createSheet()|创建新工作簿|
 
-### Worksheet
+## Worksheet
 
-#### 方法
+### 方法
 |函数|描述|应用|
 |:---|:---|:---|
 |setTitle()|设置工作簿的标题|
@@ -57,7 +60,7 @@ $spreadsheet = $reader->load($filename);
 |mergeCells()|合并单元格，参数示例：`A1:E1`|
 |mergeCellsByColumnAndRow|合并单元格，需要传入 4 个参数表示两个单元格|
 
-#### 应用
+### 应用
 
 ```php
 // 如果要获取整列单元格的样式，则仅仅传入列名
@@ -68,22 +71,22 @@ $worksheet->getDataValidation('$A:$A');
 ```
 
 
-### RowDimension
-#### 方法
+## RowDimension
+### 方法
 |函数|描述|应用|
 |:---|:---|:---|
 |setRowHeight()|设置行高|
 
 > 注意，设置行高并不是绝对准确的，excel 会适当缩放
 
-#### 应用
+### 应用
 ```php
 // 设置行高
 // 行高这里传入索引数字，从 1 开始
 $worksheet->getRowDimension($row)->setRowHeight(13.2);
 ```
 
-### ColumnDimension 
+## ColumnDimension 
 
 |函数|描述|应用|
 |:---|:---|:---|
@@ -97,7 +100,7 @@ $worksheet->getColumnDimension('A')->setWidth(8);
 
 > 注意，设置列宽并不是绝对准确的，excel 会适当缩放
 
-### Style
+## Style
 |函数|描述|应用|
 |:---|:---|:---|
 |getAlignment()|获得对齐方式||
@@ -109,7 +112,7 @@ $worksheet->getColumnDimension('A')->setWidth(8);
 $worksheet->getStyleByColumnAndRow($col, $row)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 ```
 
-#### Borders
+### Borders
 设置全部边框
 ```php
 $worksheet->getStyle(
@@ -132,34 +135,34 @@ $worksheet->getStyle('A')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_C
 ```
 
 
-#### Font
+### Font
 |函数|描述|应用|
 |:---|:---|:---|
 |setName()|设置字体||
 |setSize()|设置字体大小|
 
-##### 应用
+#### 应用
 ```php
 // 级联设置字体以及大小
 $worksheet->getStyleByColumnAndRow(1, $row)->getFont()->setName('Arial')->setSize(10);
 ```
 
-#### Fill
+### Fill
 |函数|描述|
 |:---|:---|
 |setFillType()|设置填充类型|
 |getStartColor()|获得起始颜色|
 
-##### 应用
+#### 应用
 ```php
 // 填充背景色
 $worksheet->getStyleByColumnAndRow($col, $row)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('D6E9AD');
 ```
 
-#### Color
+### Color
 
 
-### DataValidation
+## DataValidation
 |函数|描述|应用|
 |:---|:---|:---|
 |setType()|设置数据格式||
