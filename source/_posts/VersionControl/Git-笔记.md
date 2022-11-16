@@ -21,7 +21,6 @@ tags:
 # 服务器 Git
 [裸仓库搭建](https://git-scm.com/book/zh/v2/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E7%9A%84-Git-%E5%9C%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E6%90%AD%E5%BB%BA-Git)
 
-&nbsp;
 # 常用命令
 ## Getting and Creating Projects
 ### [clone](https://git-scm.com/docs/git-clone)
@@ -124,7 +123,7 @@ git reset
 情况二 <branch> 本地不存在，远程不存在。从远程拉取分支，并切换，保留工作树的改动。
 
 情况三 <branch> 本地和远程都不存在。git 会将 <branch> 识别为一个本地文件或文件夹，此时 git 会丢弃该文件当前工作树上所有的改动（危险！！！）。
-用法：`git checkout .` 可以以当前所在目录为根，递归丢弃当前文件夹下所有改动，对于 PHP 线上调试还原比较有用。
+用法：`git checkout .` 可以以当前所在目录为根，递归丢弃当前文件夹下所有改动。
 
 
 ### `git checkout -b <branch>`
