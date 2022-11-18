@@ -50,3 +50,14 @@ pg_dump --host=HOST --username=USERNAME -s -t <TABLE> <DBNAME>
 |-s|只导出表结构|
 |-t|table, 跟上表名|
 
+
+
+## SQL 
+
+- 修改表字段
+
+```sql
+alter table table_name alter field_name type varchar(32) using field_name::varchar(32);
+```
+
+> 如果需要发生显式的类型转换，需要增加 USING 关键字。即使不需要发生显式的类型转换，也可以增加 USING 关键字（稳妥）。
