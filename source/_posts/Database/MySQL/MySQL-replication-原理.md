@@ -2,6 +2,7 @@
 title: MySQL replication 原理
 date: 2022-11-18 17:05:11
 tags:
+- MySQL
 ---
 
 

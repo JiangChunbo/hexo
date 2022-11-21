@@ -2,6 +2,7 @@
 title: MySQL replication 多主一从
 date: 2022-11-18 17:13:14
 tags:
+- MySQL
 ---
 
 # 多主一从

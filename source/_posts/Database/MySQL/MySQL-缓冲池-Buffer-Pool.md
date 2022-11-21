@@ -2,6 +2,7 @@
 title: MySQL InnoDB Buffer Pool
 date: 2022-07-20 22:12:49
 tags:
+- MySQL
 ---
 
 # MySQL InnoDB Buffer Pool

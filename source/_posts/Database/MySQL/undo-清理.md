@@ -2,6 +2,7 @@
 title: undo 清理
 date: 2022-05-02 02:09:23
 tags:
+- MySQL
 ---
 
 # purge_queue

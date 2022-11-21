@@ -16,7 +16,7 @@ org.apache.ibatis.reflection.ParamNameResolver#wrapToMapIfCollection
     - 参数类型是 `List`，可以使用 `list` 参数名
     - 参数类型是数组，可以使用 `array` 参数名
 
-
+> 为了较好的语义性，在单个参数是集合或者数组时，可以使用 `@Param` 进行命名。
 
 # 分析
 
