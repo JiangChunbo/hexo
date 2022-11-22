@@ -11,6 +11,17 @@ tags:
 https://github.com/alibaba/fastjson
 
 
+# 常见转换
+
+
+## JSON >> Java Bean
+
+```java
+String json = "";
+JSONObject.parseObject(json, SubtaskDurationOpenApiQuery.class);
+```
+
+
 # Java Bean 字段名称转换
 
 - 类注解

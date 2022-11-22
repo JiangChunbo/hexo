@@ -193,6 +193,49 @@ private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new Conc
 
 ### [2.7. plugins](https://mybatis.org/mybatis-3/configuration.html#plugins)
 
+MyBatis 允许你在映射语句的执行中拦截对某些点的调用。默认地，MyBatis 允许插件拦截方法调用有:
+
+- Executor(update, query, flushStatements, commit, rollback, getTransaction, close, isClosed)
+- ParameterHandler (getParameterObject, setParameters)
+- ResultSetHandler (handleResultSets, handleOutputParameters)
+- StatementHandler (prepare, parameterize, batch, update, query)
+
+通过查看每个类方法地完整方法签名和每个 MyBatis 发行版提供的源代码，可以找到这些类方法的详细信息。你应该理解正在重写的方法的行为，假设你正在做的不仅仅是监视调用。如果你试图修改或覆盖给定方法的行为，则很可能破坏 MyBatis 的核心。这些都是底层的类和方法，所以使用插件时要谨慎。
+
+考虑到插件提供的功能，使用插件非常简单。只需实现拦截器接口，确保指定要拦截的签名。
+
+```java
+// ExamplePlugin.java
+@Intercepts({@Signature(
+  type= Executor.class,
+  method = "update",
+  args = {MappedStatement.class,Object.class})})
+public class ExamplePlugin implements Interceptor {
+  private Properties properties = new Properties();
+
+  @Override
+  public Object intercept(Invocation invocation) throws Throwable {
+    // implement pre-processing if needed
+    Object returnObject = invocation.proceed();
+    // implement post-processing if needed
+    return returnObject;
+  }
+
+  @Override
+  public void setProperties(Properties properties) {
+    this.properties = properties;
+  }
+}
+```
+
+```xml
+<!-- mybatis-config.xml -->
+<plugins>
+  <plugin interceptor="org.mybatis.example.ExamplePlugin">
+    <property name="someProperty" value="100"/>
+  </plugin>
+</plugins>
+```
 
 ### [2.8. environments](https://mybatis.org/mybatis-3/configuration.html#environments)
 MyBatis 可以配置多个环境。这有助于你以任何原因将 SQL 映射到不同的数据库。例如，你可能对于开发，测试和生产环境由不同的配置。或者，你可能有多个表结构相同的生产数据库，并且你希望为两者使用相同的 SQL 映射。
