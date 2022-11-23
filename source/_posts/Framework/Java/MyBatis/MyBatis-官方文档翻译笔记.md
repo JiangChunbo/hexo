@@ -187,8 +187,38 @@ private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new Conc
 
 
 ### [2.6. objectFactory](https://mybatis.org/mybatis-3/configuration.html#objectFactory)
-使用 ObjectFactory 进行创建结果对象的新实例。不仅支持无参构造器的创建，也支持有参构造器创建。
 
+每次 MyBatis 创建结果对象新实例时，它都会使用 `ObjectFactory` 实例来完成此操作。默认的 `ObjectFactory` 只是使用默认构造函数实例化目标类，如果存在参数映射，则使用参数化构造函数。如果你想覆盖 `ObjectFactory` 的默认行为，你可以创建自己的 `ObjectFactory`。例如:
+
+```java
+// ExampleObjectFactory.java
+public class ExampleObjectFactory extends DefaultObjectFactory {
+  @Override
+  public <T> T create(Class<T> type) {
+    return super.create(type);
+  }
+
+  @Override
+  public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+    return super.create(type, constructorArgTypes, constructorArgs);
+  }
+
+  @Override
+  public void setProperties(Properties properties) {
+    super.setProperties(properties);
+  }
+
+  @Override
+  public <T> boolean isCollection(Class<T> type) {
+    return Collection.class.isAssignableFrom(type);
+  }
+}
+```
+
+<!-- mybatis-config.xml -->
+<objectFactory type="org.mybatis.example.ExampleObjectFactory">
+  <property name="someProperty" value="100"/>
+</objectFactory>
 
 
 ### [2.7. plugins](https://mybatis.org/mybatis-3/configuration.html#plugins)
@@ -256,6 +286,23 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
 
 MyBatis 包含了两种事务管理器，JDBC | MANAGED
 
+- JDBC —— 此配置只是直接使用 JDBC 提交和回滚工具。它依赖于从数据源获取的连接来管理事务的范围。默认情况下，它在关闭连接时启用自动提交功能，以便与某些驱动程序兼容。然而，对于一些驱动程序来说，启用自动提交不仅没有必要，而且是一个昂贵的操作。因此，从 3.5.10 版本开始，你可以通过将 "skipSetAutoCommitOnClose" 属性设置为 true 来跳过这一步。例如: 
+
+```xml
+<transactionManager type="JDBC">
+  <property name="skipSetAutoCommitOnClose" value="true"/>
+</transactionManager>
+```
+
+- MANAGED —— 这种配置几乎什么也不做。它不提交或回滚连接。相反，它让容器管理事务的整个生命周期（例如 JEE 应用服务器上下文）。默认情况下，它会关闭连接。但是，有些容器并不期望这样，因此，如果你需要组织它关闭连接，请将 "closeConnection" 属性设置为 false。例如:
+
+```xml
+<transactionManager type="MANAGED">
+  <property name="closeConnection" value="false"/>
+</transactionManager>
+```
+
+> 注意 如果你打算将 MyBatis 与 Spring 一起使用，则不需要配置任何 `TransactionManager`，因为 Spring 模块将设置自己的 `TransactionManager`，覆盖之前设置的任何配置。
 
 **dataSource**
 

@@ -33,7 +33,7 @@ https://developer.aliyun.com/article/828451
         <execution>
             <id>Generate MyBatis Artifacts</id>
             <goals>
-            <goal>generate</goal>
+                <goal>generate</goal>
             </goals>
         </execution>
     </executions>
@@ -41,48 +41,6 @@ https://developer.aliyun.com/article/828451
 ```
 
 如果你需要向插件的类路径添加一些东西（例如，JDBC 驱动程序），你可以通过向插件配置中添加依赖项来完成：
-
-```xml
-<plugin>
-    <groupId>org.mybatis.generator</groupId>
-    <artifactId>mybatis-generator-maven-plugin</artifactId>
-    <version>1.4.1</version>
-    <executions>
-        <execution>
-            <id>Generate MyBatis Artifacts</id>
-            <goals>
-            <goal>generate</goal>
-            </goals>
-        </execution>
-    </executions>
-    <dependencies>
-        <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>2.3.4</version>
-        </dependency>
-    </dependencies>
-</plugin>
-```
-
-```xml
-<plugin>
-    <groupId>org.mybatis.generator</groupId>
-    <artifactId>mybatis-generator-maven-plugin</artifactId>
-    <version>1.3.7</version>
-    <configuration>
-        <overwrite>true</overwrite>
-        <configurationFile>src/main/resources/generatorConfig.xml</configurationFile>
-    </configuration>
-    <dependencies>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.20</version>
-        </dependency>
-    </dependencies>
-</plugin>
-```
 
 ```xml
 <plugin>
