@@ -302,7 +302,7 @@ MyBatis 包含了两种事务管理器，JDBC | MANAGED
 </transactionManager>
 ```
 
-> 注意 如果你打算将 MyBatis 与 Spring 一起使用，则不需要配置任何 `TransactionManager`，因为 Spring 模块将设置自己的 `TransactionManager`，覆盖之前设置的任何配置。
+> **注意** 如果你打算将 MyBatis 与 Spring 一起使用，则不需要配置任何 `TransactionManager`，因为 Spring 模块将设置自己的 `TransactionManager`，覆盖之前设置的任何配置。
 
 **dataSource**
 
