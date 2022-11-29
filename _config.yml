@@ -14,7 +14,7 @@ timezone: Asia/Shanghai
 search:
   path: search.xml
   field: post
-  format: html
+  format: striptags
   limit: 10000
 
 # URL

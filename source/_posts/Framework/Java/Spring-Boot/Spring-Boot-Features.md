@@ -616,7 +616,7 @@ Spring Boot 可以自动配置嵌入式 H2，HSQL，以及 Derby 数据库。你
 
 #### [11.1.2. Connection to a Production Database](https://docs.spring.io/spring-boot/docs/2.3.12.RELEASE/reference/html/spring-boot-features.html#boot-features-connect-to-production-database)
 
-生产数据库连接也可以通过池化 `DataSource` 自动配置。Spring Boot 使用下面的算法选择特定的实现：
+还可以通过使用池化 `DataSource` 自动配置生产数据库连接。Spring Boot 使用以下算法来选择特定的实现：
 
 1. 我们更喜欢 HikariCP 的性能和并发。如果 HikariCP 可用，我们始终会选择它
 2. 否则，如果 Tomcat 池化 `DataSource` 可用，我们将使用它
