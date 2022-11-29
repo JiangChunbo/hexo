@@ -109,8 +109,8 @@ theme: vexo
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repository: git@github.com:JiangChunbo/jiangchunbo.github.io.git
-  branch: main
+  repository: root@112.124.1.100:/opt/git/blog
+  branch: master
 
 # 数学公式的支持
 math:
