@@ -14,8 +14,8 @@ menu:
  About: /about/
 
 # highlight
-highlight:
-  tomorrow
+# highlight:
+#   tomorrow
 
 # catalog
 catalog: true

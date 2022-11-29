@@ -48,8 +48,8 @@ private BlockingQueue<PooledConnection> idle;
 一般思路是: 当需要获得一个 connection 时，从 `idle` 中 `poll` 一个 connection，然后将该 connection 再 `offer` 至 `busy` 队列中。这是最基本的思路。
 
 
-```java
-private PooledConnection borrowConnection(int wait, String username, String password) throws SQLException {
+``` java
+private PooledConnection borrowConnection (int wait, String username, String password) throws SQLException {
 
     if (isClosed()) {
         throw new SQLException("Connection pool closed.");
