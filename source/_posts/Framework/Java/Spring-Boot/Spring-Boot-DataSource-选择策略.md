@@ -10,11 +10,9 @@ tags:
 https://docs.spring.io/spring-boot/docs/2.3.12.RELEASE/reference/html/spring-boot-features.html#boot-features-connect-to-production-database
 
 # 选择算法
-1. 我们更喜欢 HikariCP 的性能和并发。如果 HikariCP 可用，我们始终会选择它
-2. 否则，如果 Tomcat 池化 `DataSource` 可用，我们将使用它
-3. 如果 HikariCP 和 Tomcat 池化数据源都不可用，并且 Commons DBCP2 可用，我们会使用它
-
-没有找到任何数据源，则抛出异常
+1. HikariCP
+2. Tomcat JDBC
+3. Commons DBCP2
 
 
 请打开 `DataSourceAutoConfiguration` 类的定义，这是一个自动配置类，其中会尝试自动注入池化 `DataSource`:

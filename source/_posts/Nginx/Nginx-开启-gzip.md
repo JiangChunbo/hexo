@@ -5,6 +5,19 @@ tags:
 ---
 
 
+**GZIP 指令说明**
+|指令|含义|默认值|备注|
+|:---|:---|:---|:---|
+|[gzip](http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip)| 打开或关闭 gzip| gzip off|
+|[gzip_buffers](http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_buffers)|用于压缩相应的缓冲区数量和大小|默认 gzip_buffers 32 4k \| 16 8k，与平台有关||
+|[gzip_comp_level](http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_comp_level)|压缩等级，可选值 1 ~ 9|1|不是越大越好，越大会消耗 CPU，效果不成正比|
+|[gzip_disable regex](http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_disable)|使用指定的正则匹配需要压缩的 User-Agent 请求|无|默认匹配一切 User-Agent|
+|[gzip_http_version](http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_http_version)|压缩响应所需的请求最低 HTTP 版本|1.1||
+|[gzip_min_length](http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_min_length)|设置被 gzip 压缩的响应的最小长度，由 Content-Length 决定，单位 K|20||
+|[gzip_types](http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_types)|除了 text/html 之外，还需要压缩的 MIME 类型|text/html|text/html 总是被压缩|
+
+
+**配置示例**
 
 ```css
 # 开启gzip，关闭用off
