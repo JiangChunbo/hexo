@@ -57,8 +57,6 @@ highlight:
   wrap: true
   hljs: false
 
-custom_highlight_theme: sunburst
-
 prismjs:
   enable: false
   preprocess: true
