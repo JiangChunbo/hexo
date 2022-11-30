@@ -50,14 +50,13 @@ private BlockingQueue<PooledConnection> idle;
 
 ```java
 private PooledConnection borrowConnection (int wait, String username, String password) throws SQLException {
-
     if (isClosed()) {
         throw new SQLException("Connection pool closed.");
     } // 如果 Pool 关闭，抛出异常
 
     //get the current time stamp
     long now = System.currentTimeMillis();
-    // 看看是否有一个立即可用的 connection
+    // 立即查看一下，是否有一个可用的 connection
     PooledConnection con = idle.poll();
 
     while (true) {
@@ -70,16 +69,23 @@ private PooledConnection borrowConnection (int wait, String username, String pas
             }
         }
 
+        // 如果走到这里，表示之前没有拿到可用的 connection
+
         //if we get here, see if we need to create one
         //this is not 100% accurate since it doesn't use a shared
         //atomic variable - a connection can become idle while we are creating
         //a new connection
-        // 由于没有使用共享的原子性变量，
-        // 因此当我们创建一个新的 connection 的时候，有可能这时候一个 connection 就空闲下来了
+        // 看看是否我们需要创建一个新的 connection
+
+
+        /**
+         * 注意：由于没有使用共享的原子性变量，
+         * 因此当我们创建一个新的 connection 的时候，有可能这时候一个 connection 就空闲下来了
+         */
         if (size.get() < getPoolProperties().getMaxActive()) {
             // 原子性双重检测，减少 size.addAndGet 的并发
             if (size.addAndGet(1) > getPoolProperties().getMaxActive()) {
-                // 如果走到这里，则表示线程并发，有多个线程进入该逻辑，操作是无效的，数量减一
+                // 如果走到这里，则表示线程并发，有多个线程进入该逻辑，操作是无效的，size 还原（减一）
                 size.decrementAndGet();
             } else {
                 // 可以创建线程，低于 max_active
@@ -89,11 +95,12 @@ private PooledConnection borrowConnection (int wait, String username, String pas
 
         //calculate wait time for this iteration
         long maxWait = wait;
-        //if the passed in wait time is -1, means we should use the pool property value
+        // 如果传递的 wait time 值是 -1，意味着我们用 pool 的属性值
         if (wait==-1) {
             maxWait = (getPoolProperties().getMaxWait()<=0)?Long.MAX_VALUE:getPoolProperties().getMaxWait();
         }
 
+        // 等待时间
         long timetowait = Math.max(0, maxWait - (System.currentTimeMillis() - now));
         waitcount.incrementAndGet();
         try {
@@ -109,15 +116,18 @@ private PooledConnection borrowConnection (int wait, String username, String pas
         } finally {
             waitcount.decrementAndGet();
         }
-        if (maxWait==0 && con == null) { //no wait, return one if we have one
+
+
+        // con 为 null 表示等待超时
+        if (maxWait==0 && con == null) { // 不等待，如果有一个 conn，下一次循环就会返回
             if (jmxPool!=null) {
                 jmxPool.notify(org.apache.tomcat.jdbc.pool.jmx.ConnectionPool.POOL_EMPTY, "Pool empty - no wait.");
             }
             throw new PoolExhaustedException("[" + Thread.currentThread().getName()+"] " +
                     "NoWait: Pool empty. Unable to fetch a connection, none available["+busy.size()+" in use].");
         }
-        //we didn't get a connection, lets see if we timed out
-        if (con == null) {
+        // 没有获取 connection，看一下是否超时了
+        if (con == null) { // maxWait > 0
             if ((System.currentTimeMillis() - now) >= maxWait) {
                 if (jmxPool!=null) {
                     jmxPool.notify(org.apache.tomcat.jdbc.pool.jmx.ConnectionPool.POOL_EMPTY, "Pool empty - timeout.");
@@ -126,7 +136,8 @@ private PooledConnection borrowConnection (int wait, String username, String pas
                     "Timeout: Pool empty. Unable to fetch a connection in " + (maxWait / 1000) +
                     " seconds, none available[size:"+size.get() +"; busy:"+busy.size()+"; idle:"+idle.size()+"; lastwait:"+timetowait+"].");
             } else {
-                //no timeout, lets try again
+                // 没有超时，让我们再试一次
+                // 貌似一般不会走到这一步
                 continue;
             }
         }
