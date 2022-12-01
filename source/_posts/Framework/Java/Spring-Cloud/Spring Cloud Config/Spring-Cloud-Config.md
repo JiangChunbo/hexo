@@ -39,32 +39,71 @@ HTTP 服务以下格式的资源：
 ```
 
 ### [1.1. Client Side Usage](https://docs.spring.io/spring-cloud-config/docs/2.2.8.RELEASE/reference/html/#_client_side_usage)
-为了在应用程序中使用这些功能，你可以将其构建为依赖于 `spring-cloud-config-client` 的Spring Boot 项目。最简便的方法是使用 Spring Boot 启动器 `org.springframework.cloud:spring-cloud-starter-config`。对于 maven 用户以及 Gradle 和 Spring CLI 用户的 Spring IO 版本管理属性文件，也有一个父 POM 和 BOM（spring-cloud-starter-parent）。
+为了在应用程序中使用这些功能，你可以将其构建为依赖于 `spring-cloud-config-client` 的 Spring Boot 项目。最简便的方法是使用 Spring Boot 启动器 `org.springframework.cloud:spring-cloud-starter-config`。还有一个面向 Maven 用户的父 POM 和 BOM (`spring-cloud-starter-parent`)，以及面向 Gradle 和 Spring CLI 用户的 Spring IO 版本管理属性文件。下面的示例展示了一个典型的 Maven 配置:
 
 ```xml
-<dependency>
-	<groupId>org.springframework.cloud</groupId>
-	<artifactId>spring-cloud-starter-config</artifactId>
-</dependency>
-```
+<parent>
+       <groupId>org.springframework.boot</groupId>
+       <artifactId>spring-boot-starter-parent</artifactId>
+       <version>{spring-boot-docs-version}</version>
+       <relativePath /> <!-- lookup parent from repository -->
+   </parent>
 
+<dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-dependencies</artifactId>
+			<version>{spring-cloud-version}</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+	</dependencies>
+</dependencyManagement>
+
+<dependencies>
+	<dependency>
+		<groupId>org.springframework.cloud</groupId>
+		<artifactId>spring-cloud-starter-config</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-test</artifactId>
+		<scope>test</scope>
+	</dependency>
+</dependencies>
+
+<build>
+	<plugins>
+           <plugin>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-maven-plugin</artifactId>
+           </plugin>
+	</plugins>
+</build>
+
+   <!-- repositories also needed for snapshots and milestones -->
+```
 
 现在，你可以创建一个标准的 Spring Boot 应用，就像下面的 HTTP 服务：
 ```java
 @SpringBootApplication
 @RestController
 public class Application {
+
     @RequestMapping("/")
     public String home() {
         return "Hello World!";
     }
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+
 }
 ```
 
-当这个 HTTP 服务启动的时候，它会从默认的监听于本地端口 8888 配置服务（如果启动了）获取外部配置。如果想修改默认行为，你可以修改 bootstrap.properties 中的配置服务的位置，如下所示：
+当这个 HTTP 服务启动的时候，它会从默认的监听于本地端口 8888 配置服务（如果启动了）获取外部配置。如果想修改默认行为，你可以修改 `bootstrap.properties` 中的配置服务的位置，如下所示：
 
 ```bash
 spring.cloud.config.uri: http://myconfigserver.com
@@ -126,7 +165,7 @@ spring.cloud.config.server.git.uri: file://${user.home}/config-repo
 
 #### [2.1.1. Git Backend](https://docs.spring.io/spring-cloud-config/docs/2.2.8.RELEASE/reference/html/#_git_backend)
 
-默认的 `EnvironmentRepository` 的实现使用 Git 后端，这对于管理升级和物理环境，以及对于跟踪变化非常方便。要更改存储库的位置，你可以在 Config Server（例如在 `application.yml` 中）中设置 `spring.cloud.config.server.git.uri` 配置属性。如果你用一个 `file:` 前缀进行设置，则应从本地存储库工作，以便于你可以在没有服务器的情况下快速启动。但是，在这种情况下，服务直接在本地存储库上操作而无需克隆（无论是否是裸仓库都无关紧要，因为 Config Server 永远不会更改 "remote" 存储库）。为了扩展 Config Server 并使其高度可用，你需要将所有服务实例指向相同的存储库，因此只有共享文件系统才能起作用。甚至在这种情况下，最好将 `ssh:` 协议用于共享文件系统存储库，以便于服务可以克隆它，并将本地工作副本作为缓存。
+默认的 `EnvironmentRepository` 实现使用 Git 后端，这对于管理升级和物理环境，以及对于跟踪变化非常方便。要更改存储库的位置，你可以在 Config Server（例如在 `application.yml` 中）中设置 `spring.cloud.config.server.git.uri` 配置属性。如果你用一个 `file:` 前缀进行设置，则应从本地存储库工作，以便于你可以在没有服务器的情况下快速启动。但是，在这种情况下，服务直接在本地存储库上操作而无需克隆（无论是否是裸仓库都无关紧要，因为 Config Server 永远不会更改 "remote" 存储库）。为了扩展 Config Server 并使其高度可用，你需要将所有服务实例指向相同的存储库，因此只有共享文件系统才能起作用。甚至在这种情况下，最好将 `ssh:` 协议用于共享文件系统存储库，以便于服务可以克隆它，并将本地工作副本作为缓存。
 
 ##### [Skipping SSL Certificate Validation](https://docs.spring.io/spring-cloud-config/docs/2.2.8.RELEASE/reference/html/#_skipping_ssl_certificate_validation)
 
@@ -209,10 +248,22 @@ Spring Cloud Config 服务支持 JDBC 作为配置属性的后端。你可以通
 
 如果远程属性资源包含加密内容（以 `{cipher}` 开头），则先解密再通过 HTTP 发送。该设置的优点是：当属性值 "静止" 时，不需要以纯文本方式展示。如果值无法被解密，将会从属性源中删除它，并添加一个额外的有相同键的属性，但是具有 `invalid` 前缀，值意味着不适用。这主要是为了加密文本用作密码，有可能意外泄漏。
 
-### [2.5. Key Management](https://docs.spring.io/spring-cloud-config/docs/2.2.8.RELEASE/reference/html/#_key_management)
-Config Server 可以使用对称加密或者非对称加密（RSA 密钥对）。选择不对称加密在安全性方面更优越，但使用对称密钥通常更方便，因为它是在 `bootstrap.properties` 中配置的单个属性值。
+服务器还暴露了 `/encrypt` 和 `/decrypt` 端点（假设这些端点是安全的，并且仅由授权的代理访问）。如果你编辑远程配置文件，你可以使用 Config Server 通过 POST 到 `encrypt` 端点对值进行加密，如下所示:
+```bash
+$ curl localhost:8888/encrypt -s -d mysecret
+682bc583f4641835fa2db009355293665d2647dade3375c0ee201de2a49f7bda
+```
 
-要配置对称密钥，你需要设置 `encryt.key` 为密钥字符串（或者使用 `ENCRYPT_KEY` 环境变量，可以脱离纯文本配置文件）。
+获取加密的值，并在将其放入 YAML 或者属性文件以及 commit 且 push 其到远程存储（可能并不安全）之前添加 `{cipher}` 前缀。
+
+> 远程存储可能并不安全，因此需要加密
+
+### [2.5. Key Management](https://docs.spring.io/spring-cloud-config/docs/2.2.8.RELEASE/reference/html/#_key_management)
+Config Server 可以使用对称（共享）密钥，也可以使用非对称密钥（RSA 密钥对）。在安全性方面，选择非对称加密更优越，但使用对称密钥通常更方便，因为它是在 `bootstrap.properties` 中配置的单个属性值。
+
+要配置对称密钥，你需要设置 `encryt.key` 为密钥字符串（或者使用 `ENCRYPT_KEY` 环境变量，使其脱离纯文本配置文件）。
+
+> 不能使用 `encrypt.key` 配置非对称密钥
 
 
 ### [2.6. Creating a Key Store for Testing](https://docs.spring.io/spring-cloud-config/docs/2.2.8.RELEASE/reference/html/#_creating_a_key_store_for_testing)
