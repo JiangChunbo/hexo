@@ -26,15 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let startPosition = 0;
     let position = [];
     let index = [];
+    let included = new Set();
     if (!caseSensitive) {
       text = text.toLowerCase();
       word = word.toLowerCase();
     }
     while ((position = text.indexOf(word, startPosition)) > -1) {
       index.push({ position, word });
+      included.add(word);
       startPosition = position + wordLen;
     }
-    return index;
+    return [index, included];
   };
 
   // Merge hits into slices
@@ -92,22 +94,35 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!isfetched) return;
     let searchText = input.value.trim().toLowerCase();
     let keywords = searchText.split(/[-\s]+/);
-    if (keywords.length > 1) {
-      keywords.push(searchText);
-    }
+    // if (keywords.length > 1) {
+    //   keywords.push(searchText);
+    // }
     let resultItems = [];
     if (searchText.length > 0) {
       // Perform local searching
       datas.forEach(({ title, content, url }) => {
         let titleInLowerCase = title.toLowerCase();
         let contentInLowerCase = content.toLowerCase();
-        let indexOfTitle = [];
+        let indexOfTitle = [];indexOfTitle
         let indexOfContent = [];
         let searchTextCount = 0;
+        let mergedKeys = new Set();
         keywords.forEach(keyword => {
-          indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
-          indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+          const [_indexOfTitle, _keysOfTitle] = getIndexByWord(keyword, titleInLowerCase, false);
+          indexOfTitle = indexOfTitle.concat(_indexOfTitle);
+          if (_keysOfTitle.size > 0) {
+            mergedKeys.add(..._keysOfTitle);
+          }
+          const [_indexOfContent, _keysOfContent] = getIndexByWord(keyword, contentInLowerCase, false);
+          indexOfContent = indexOfContent.concat(_indexOfContent);
+          if (_keysOfContent.size > 0) {
+            mergedKeys.add(..._keysOfContent);
+          }
         });
+        const includedCount = mergedKeys.size;
+        if (includedCount !== keywords.length) {
+          return;
+        }
 
         // Show search results
         if (indexOfTitle.length > 0 || indexOfContent.length > 0) {

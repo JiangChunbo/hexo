@@ -72,12 +72,12 @@ https://developer.aliyun.com/article/828451
 # 实体类的配置
 java-model-generator.target-package=
 java-model-generator.target-project=
-# XML Mapper 配置
-sql-map-generator.target-package=
-sql-map-generator.target-project=
 # DAO 配置
 java-client-generator.target-package=
 java-client-generator.target-project=
+# XML Mapper 配置
+sql-map-generator.target-package=
+sql-map-generator.target-project=
 # 数据库相关配置
 driver-class=
 connection-url=
@@ -89,93 +89,101 @@ password=
 ## `<context>`
 
 ```xml
-<context id="myContext" targetRuntime="MyBatis3">
-    <!-- PostgreSQL 界定符，不需要双引号就注释掉 -->
-    <property name="beginningDelimiter" value="&quot;" />
-    <property name="endingDelimiter" value="&quot;" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <properties resource="generatorConfig.properties" />
+    <context id="myContext" targetRuntime="MyBatis3">
+        <!-- PostgreSQL 界定符，不需要双引号就注释掉 -->
+        <property name="beginningDelimiter" value="&quot;" />
+        <property name="endingDelimiter" value="&quot;" />
 
 
-    <!-- 关于注解的时间格式化格式，给 SimpleDateFormat 用 -->
-    <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss" />
+        <!-- 关于注解的时间格式化格式，给 SimpleDateFormat 用 -->
+        <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss" />
 
-    <!-- 指定编码。不指定可能会使用默认的 GBK -->
-    <property name="javaFileEncoding" value="UTF-8" />
+        <!-- 指定编码。不指定可能会使用默认的 GBK -->
+        <property name="javaFileEncoding" value="UTF-8" />
 
-    <!-- <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/> -->
-    <!-- <plugin type="com.jiangchunbo.mybatis.generator.plugins.BasePlugin"/> -->
-    <plugin
-        type="com.jiangchunbo.mybatis.generator.plugins.RenameXmlMapperPlugin" />
-    <!-- <plugin
-        type="com.jiangchunbo.mybatis.generator.plugins.LombokModelPlugin" /> -->
+        <!-- <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/> -->
+        <!-- <plugin type="com.jiangchunbo.mybatis.generator.plugins.BasePlugin"/> -->
+        <plugin
+            type="com.jiangchunbo.mybatis.generator.plugins.RenameXmlMapperPlugin" />
+        <!-- <plugin
+            type="com.jiangchunbo.mybatis.generator.plugins.LombokModelPlugin" /> -->
 
-    <commentGenerator type="com.jiangchunbo.mybatis.generator.plugins.CustomCommentGenerator">
-        <!-- 压制日期。如果为 true，则注释部分不显示日期 -->
-        <property name="suppressDate" value="false" />
-        <!-- 压制所有注释。如果为 true，则注释不显示，将会导致合并代码失效 -->
-        <property name="suppressAllComments" value="false" />
-        <property name="addRemarkComments" value="true" />
-        <property name="dateFormat"
-            value="yyyy-MM-dd HH:mm:ss" />
-    </commentGenerator>
+        <commentGenerator type="com.jiangchunbo.mybatis.generator.plugins.CustomCommentGenerator">
+            <!-- 压制日期。如果为 true，则注释部分不显示日期 -->
+            <property name="suppressDate" value="false" />
+            <!-- 压制所有注释。如果为 true，则注释不显示，将会导致合并代码失效 -->
+            <property name="suppressAllComments" value="false" />
+            <property name="addRemarkComments" value="true" />
+            <property name="dateFormat"
+                value="yyyy-MM-dd HH:mm:ss" />
+        </commentGenerator>
 
-    <!-- 数据库配置 -->
-    <jdbcConnection driverClass="${driver-class}"
-        connectionURL="${connection-url}" userId="${user-id}"
-        password="${password}">
-        <property name="useInformationSchema" value="true" />
-    </jdbcConnection>
+        <!-- 数据库配置 -->
+        <jdbcConnection driverClass="${driver-class}"
+            connectionURL="${connection-url}" userId="${user-id}"
+            password="${password}">
+            <property name="nullCatalogMeansCurrent" value="true"/>
+            <property name="useInformationSchema" value="true" />
+        </jdbcConnection>
 
-    <!-- 
-        Java 类型处理器
-        处理 DB 类型到 Java 类型，默认使用 JavaTypeResolverDefaultImpl
-        注意一点，默认会先尝试使用Integer，Long，Short等来对应DECIMAL和 NUMERIC数据类型
-     -->
-    <javaTypeResolver>
         <!-- 
-            true：使用BigDecimal对应DECIMAL和 NUMERIC数据类型
-            false：默认,
-                scale>0;length>18：使用BigDecimal;
-                scale=0;length[10,18]：使用Long；
-                scale=0;length[5,9]：使用Integer；
-                scale=0;length<5：使用Short；
-         -->
-        <property name="forceBigDecimals" value="false" />
-    </javaTypeResolver>
+            Java 类型处理器
+            处理 DB 类型到 Java 类型，默认使用 JavaTypeResolverDefaultImpl
+            注意一点，默认会先尝试使用Integer，Long，Short等来对应DECIMAL和 NUMERIC数据类型
+        -->
+        <javaTypeResolver>
+            <!-- 
+                true：使用 BigDecimal 对应 decimal 和 numeric 数据类型
+                false：默认,
+                    scale>0;length>18：使用BigDecimal;
+                    scale=0;length[10,18]：使用Long；
+                    scale=0;length[5,9]：使用Integer；
+                    scale=0;length<5：使用Short；
+            -->
+            <property name="forceBigDecimals" value="true" />
+        </javaTypeResolver>
 
-    <!--
-         java模型创建器，是必须要的元素
-        负责：1，key类（见context的defaultModelType）；2，java类；3，查询类
-        targetPackage：生成的类要放的包，真实的包受enableSubPackages属性控制；
-        targetProject：目标项目，指定一个存在的目录下，生成的内容会放到指定目录中，如果目录不存在，MBG不会自动建目录
-     -->
-    <javaModelGenerator
-        targetPackage="${java-model-generator.target-package}"
-        targetProject="${java-model-generator.target-project}">
-        <property name="enableSubPackages" value="true" />
-        <property name="trimStrings" value="true" />
-    </javaModelGenerator>
+        <!--
+            java模型创建器，是必须要的元素
+            负责：1，key类（见context的defaultModelType）；2，java类；3，查询类
+            targetPackage：生成的类要放的包，真实的包受enableSubPackages属性控制；
+            targetProject：目标项目，指定一个存在的目录下，生成的内容会放到指定目录中，如果目录不存在，MBG不会自动建目录
+        -->
+        <javaModelGenerator
+            targetPackage="${java-model-generator.target-package}"
+            targetProject="${java-model-generator.target-project}">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
 
-    <sqlMapGenerator
-        targetPackage="${sql-map-generator.target-package}"
-        targetProject="${sql-map-generator.target-project}">
-        <property name="enableSubPackages" value="true" />
-    </sqlMapGenerator>
+        <sqlMapGenerator
+            targetPackage="${sql-map-generator.target-package}"
+            targetProject="${sql-map-generator.target-project}">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
 
-    <javaClientGenerator type="XMLMAPPER"
-        targetPackage="${java-client-generator.target-package}"
-        targetProject="${java-client-generator.target-project}">
-        <property name="enableSubPackages" value="true" />
-    </javaClientGenerator>
+        <javaClientGenerator type="XMLMAPPER"
+            targetPackage="${java-client-generator.target-package}"
+            targetProject="${java-client-generator.target-project}">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
 
-    <table tableName="abnormalstock_subtask_duration"
-        domainObjectName="JnjSubtaskDuration" enableInsert="true"
-        enableSelectByPrimaryKey="true"
-        enableUpdateByPrimaryKey="true"
-        enableDeleteByPrimaryKey="false"
-        enableCountByExample="false" enableUpdateByExample="false"
-        enableDeleteByExample="false" enableSelectByExample="false"
-        selectByExampleQueryId="false" />
-</context>
+        <table tableName="abnormalstock_subtask_duration"
+            domainObjectName="JnjSubtaskDuration" enableInsert="true"
+            enableSelectByPrimaryKey="true"
+            enableUpdateByPrimaryKey="true"
+            enableDeleteByPrimaryKey="false"
+            enableCountByExample="false" enableUpdateByExample="false"
+            enableDeleteByExample="false" enableSelectByExample="false"
+            selectByExampleQueryId="false" />
+    </context>
+</generatorConfiguration>
 ```
 
 

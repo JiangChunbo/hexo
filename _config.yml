@@ -15,6 +15,7 @@ search:
   path: search.xml
   field: post
   format: striptags
+  content: true
   limit: 10000
 
 # URL
