@@ -9,7 +9,7 @@ tags:
 
 [https://github.com/PHPOffice/PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet)
 
-# 1. composer 依赖
+# composer 依赖
 
 通过 composer 导入相关依赖
 ```bash
@@ -23,7 +23,7 @@ composer require phpoffice/phpspreadsheet
 ```
 
 
-# 2. 读取 Excel 步骤
+# 读取 Excel
 ```php
 $filename='';
 // 创建 Reader
@@ -36,74 +36,423 @@ $reader->setReadDataOnly(true);
 $spreadsheet = $reader->load($filename);
 ```
 
-# 3. 相关类
-## Spreadsheet
-|函数|描述|应用|
-|:---|:---|:---|
-|getActiveSheet()|获得活跃的工作簿|
-|createSheet()|创建新工作簿|
+# 常用 API 记录
+## [Spreadsheet](https://phpoffice.github.io/PhpSpreadsheet/classes/PhpOffice-PhpSpreadsheet-Spreadsheet.html)
+|函数|描述|
+|:---|:---|
+|[createSheet()](#method_Spreadsheet_createSheet)|创建新工作簿|
+|[getActiveSheet()](#method_Spreadsheet_getActiveSheet)|获得当前活动的 Worksheet|
+
+### <span id="method_Spreadsheet_createSheet">createSheet()</span>
+
+<table>
+<thead><tr align="left"><th>
+createSheet
+</th></tr></thead>
+<tbody>
+<tr><td>
+创建 Worksheet 并将其添加到该 workbook
+
+```php
+public createSheet([null|int $sheetIndex = null ]) : Worksheet
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
+### <span id="method_Spreadsheet_getActiveSheet">getActiveSheet()</span>
+
+<table>
+<thead><tr align="left"><th>
+getActiveSheet
+</th></tr></thead>
+<tbody>
+<tr><td>
+获得当前活动的 Worksheet
+
+```php
+public getActiveSheet() : Worksheet
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
+
+
 
 ## Worksheet
 
-### 方法
-|函数|描述|应用|
-|:---|:---|:---|
-|setTitle()|设置工作簿的标题|
-|getHighestRow()|获得最大行数|
-|setCellValue()|以坐标方式设置单元格的值。|
-|setCellValueByColumnAndRow()|以列号、行号方式设置单元格值|
-|getCell()|以坐标方式获取单元格的值|
-|getCellByColumnAndRow()|以列号、行号方式获取单元格的值|
-|getRowDimension()|以行号方式获得行维度|
-|getColumnDimension()|以列名方式获得列维度。如：'A'|
-|getStyle()|以坐标方式获得样式|[查看](#getStyle)|
-|getDataValidation()|以坐标方式获得数据校验|[查看](#getDataValidation)|
-|mergeCells()|合并单元格，参数示例：`A1:E1`|
-|mergeCellsByColumnAndRow|合并单元格，需要传入 4 个参数表示两个单元格|
+|函数|描述|
+|:---|:---|
+|[getCell()](#method_getCell)|以指定坐标获得单元格|
+|[getCellByColumnAndRow()](#method_getCellByColumnAndRow)|通过数字形式的单元格坐标以指定坐标获得单元格|
+|[getColumnDimension()](#method_getColumnDimension)|以指定列获得列维度|
+|[getHighestRow()](#method_getHighestRow)|获得最大的工作簿行数|
+|getRowDimension()|以指定行获得行维度|
+|[getStyle()](#method_getStyle)|获得单元格的样式|
+|[getTitle()](#method_getTitle)|获得标题|
+|[getDataValidation()](#method_getDataValidation)|获得数据验证|
+|[mergeCells()](#method_mergeCells)|在单元格范围内设置合并|
+|[mergeCellsByColumnAndRow()](#method_mergeCellsByColumnAndRow)|通过数字形式的单元格坐标在单元格范围内设置合并|
+|[setTitle()](#method_setTitle)|设置工作簿的标题|
+|setCellValue()|设置单元格的值|
+|setCellValueByColumnAndRow()|通过数字形式的单元格坐标设置单元格值|
 
-### 应用
+
+
+### <span id="method_getCell">getCell()</span>
+
+<table>
+<thead><tr align="left"><th>
+getCell
+</th></tr></thead>
+<tbody>
+<tr><td>
+以指定坐标获得单元格
 
 ```php
-// 如果要获取整列单元格的样式，则仅仅传入列名
-// 注意：对于列名是大写字母，而不是索引数字
-$style = $worksheet->getStyle('C');
-// 如果要配置整列的单元格，则这样传入参数
-$worksheet->getDataValidation('$A:$A');
+public getCell(array<string|int, int>|CellAddress|string $coordinate) : Cell
 ```
 
 
+</td></tr>
+</tbody>
+</table>
+
+
+### <span id="method_getCellByColumnAndRow">getCellByColumnAndRow()</span>
+
+<table>
+<thead><tr align="left"><th>
+getCellByColumnAndRow
+</th></tr></thead>
+<tbody>
+<tr><td>
+通过数字形式的单元格坐标以指定坐标获得单元格
+
+```php
+public getCellByColumnAndRow(int $columnIndex, int $row) : Cell
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
+### <span id="method_getColumnDimension">getColumnDimension()</span>
+
+<table>
+<thead><tr align="left"><th>
+getColumnDimension
+</th></tr></thead>
+<tbody>
+<tr><td>
+以指定列获得列维度
+
+```php
+public getColumnDimension(string $column) : ColumnDimension
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
+### <span id="method_getHighestRow">getHighestRow()</span>
+
+<table>
+<thead><tr align="left"><th>
+getHighestRow
+</th></tr></thead>
+<tbody>
+<tr><td>
+获得最大的工作簿行数
+
+```php
+public getHighestRow([null|string $column = null ]) : int
+```
+
+</td></tr>
+</tbody>
+</table>
+
+### <span id="method_getRowDimension">getRowDimension()</span>
+
+<table>
+<thead><tr align="left"><th>
+getRowDimension
+</th></tr></thead>
+<tbody>
+<tr><td>
+以指定行获得行维度
+
+```php
+public getRowDimension(int $row) : RowDimension
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
+### <span id="method_getStyle">getStyle()</span>
+
+<table>
+<thead><tr align="left"><th>
+getStyle
+</th></tr></thead>
+<tbody>
+<tr><td>
+以指定行获得行维度
+
+```php
+public getStyle(AddressRange|array<string|int, int>|CellAddress|int|string $cellCoordinate) : Style
+```
+
+如果要获取整列单元格的样式，则仅仅传入列名
+注意：对于列名是大写字母，而不是索引数字
+```php
+$style = $worksheet->getStyle('C');
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
+
+### <span id="method_getTitle">getTitle()</span>
+
+<table>
+<thead><tr align="left"><th>
+getTitle
+</th></tr></thead>
+<tbody>
+<tr><td>
+获得标题
+
+```php
+public getTitle() : string
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
+### <span id="method_getDataValidation">getDataValidation()</span>
+
+<table>
+<thead><tr align="left"><th>
+getDataValidation
+</th></tr></thead>
+<tbody>
+<tr><td>
+获得数据验证
+
+```php
+public getDataValidation(string $cellCoordinate) : DataValidation
+```
+
+如果要获取整列的单元格，则这样传入参数:
+
+```php
+$worksheet->getDataValidation('$A:$A');
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
+
+### <span id="method_mergeCells">mergeCells()</span>
+
+<table>
+<thead><tr align="left"><th>
+mergeCells
+</th></tr></thead>
+<tbody>
+<tr><td>
+在单元格范围内设置合并
+
+```php
+public mergeCells(AddressRange|array<string|int, int>|string $range[, string $behaviour = self::MERGE_CELL_CONTENT_EMPTY ]) : $this
+```
+
+支持合并多行多列，例如:
+
+```php
+$worksheet->mergeCells('A1:E3');
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
+
+
+
+### <span id="method_mergeCellsByColumnAndRow">mergeCellsByColumnAndRow()</span>
+
+<table>
+<thead><tr align="left"><th>
+mergeCellsByColumnAndRow
+</th></tr></thead>
+<tbody>
+<tr><td>
+通过数字形式的单元格坐标设置单元格值
+
+```php
+public mergeCellsByColumnAndRow(int $columnIndex1, int $row1, int $columnIndex2, int $row2[, string $behaviour = self::MERGE_CELL_CONTENT_EMPTY ]) : $this
+```
+
+
+支持合并多行多列，例如:
+
+```php
+$worksheet->mergeCellsByColumnAndRow(1, 1, 3, 3);
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
+
+
+
+### <span id="method_setTitle">setTitle()</span>
+
+<table>
+<thead><tr align="left"><th>
+setTitle
+</th></tr></thead>
+<tbody>
+<tr><td>
+设置标题
+
+```php
+public setTitle(string $title[, bool $updateFormulaCellReferences = true ][, bool $validate = true ]) : $this
+```
+
+</td></tr>
+</tbody>
+</table>
+
+### <span id="method_setCellValue">setCellValue()</span>
+
+<table>
+<thead><tr align="left"><th>
+setCellValue
+</th></tr></thead>
+<tbody>
+<tr><td>
+设置单元格的值
+
+```php
+public setCellValue(array<string|int, int>|CellAddress|string $coordinate, mixed $value) : $this
+```
+
+</td></tr>
+</tbody>
+</table>
+
+### <span id="method_setCellValueByColumnAndRow">setCellValueByColumnAndRow()</span>
+
+<table>
+<thead><tr align="left"><th>
+setCellValueByColumnAndRow
+</th></tr></thead>
+<tbody>
+<tr><td>
+以数字形式的单元格坐标设置单元格值
+
+```php
+public setCellValueByColumnAndRow(int $columnIndex, int $row, mixed $value) : $this
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
 ## RowDimension
-### 方法
 |函数|描述|应用|
 |:---|:---|:---|
 |setRowHeight()|设置行高|
 
-> 注意，设置行高并不是绝对准确的，excel 会适当缩放
 
-### 应用
+
+### <span id="method_rowdimension_setRowHeight">setRowHeight()</span>
+
+<table>
+<thead><tr align="left"><th>
+setRowHeight
+</th></tr></thead>
+<tbody>
+<tr><td>
+设置行高
+
+```php
+public setRowHeight(float $height[, string|null $unitOfMeasure = null ]) : $this
+```
+
+设置行高示例:
+
 ```php
 // 设置行高
 // 行高这里传入索引数字，从 1 开始
 $worksheet->getRowDimension($row)->setRowHeight(13.2);
+
+> 注意，设置行高并不是绝对准确的，excel 会适当缩放
 ```
+
+</td></tr>
+</tbody>
+</table>
 
 ## ColumnDimension 
 
-|函数|描述|应用|
-|:---|:---|:---|
+|函数|描述|
+|:---|:---|
 |setWidth()|设置宽度|
 
+### <span id="method_columndimension_setWidth">setWidth()</span>
+
+<table>
+<thead><tr align="left"><th>
+setWidth
+</th></tr></thead>
+<tbody>
+<tr><td>
+设置宽度
+
 ```php
-// 设置列宽
+public setWidth(float $width[, string|null $unitOfMeasure = null ]) : $this
+```
+
+示例，设置列宽:
+
+```php
 $worksheet->getColumnDimensionByColumn(1)->setWidth(8);
 $worksheet->getColumnDimension('A')->setWidth(8);
 ```
 
 > 注意，设置列宽并不是绝对准确的，excel 会适当缩放
+</td></tr>
+</tbody>
+</table>
+
 
 ## Style
-|函数|描述|应用|
-|:---|:---|:---|
+|函数|描述|
+|:---|:---|
 |getAlignment()|获得对齐方式||
 |getFont()|获得字体|
 |getBorders()|获得边框|
@@ -122,11 +471,86 @@ $worksheet->getStyle(
 	$worksheet->getHighestRow()
 )->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 ```
-#### Alignment
-|函数|描述|应用|
-|:---|:---|:---|
-|setWrapText()|设置对齐方式||
-|setHorizontal()|设置自动换行|
+## Alignment
+|函数|描述|
+|:---|:---|
+|[setHorizontal()](#method_alignment_setHorizontal)|设置水平方式|
+|[setHorizontal()](#method_alignment_setHorizontal)|设置水平方式|
+|setWrapText()|设置是否自动换行|
+
+
+### <span id="method_alignment_setHorizontal">setHorizontal()</span>
+
+<table>
+<thead><tr align="left"><th>
+setHorizontal
+</th></tr></thead>
+<tbody>
+<tr><td>
+设置水平方式
+
+```php
+public setHorizontal(string $horizontalAlignment) : $this
+```
+
+**参数**
+
+```php
+$horizontalAlignment : string
+	see self::HORIZONTAL_*
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
+
+### <span id="method_alignment_setVertical">setVertical()</span>
+
+<table>
+<thead><tr align="left"><th>
+setVertical
+</th></tr></thead>
+<tbody>
+<tr><td>
+设置垂直对齐方式
+
+```php
+public setVertical(string $verticalAlignment) : $this
+```
+
+**参数**
+
+```php
+$verticalAlignment : string
+	see self::VERTICAL_*
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
+
+### <span id="method_alignment_setWrapText">setWrapText()</span>
+
+<table>
+<thead><tr align="left"><th>
+setWrapText
+</th></tr></thead>
+<tbody>
+<tr><td>
+设置宽度
+
+```php
+public setWrapText(bool $wrapped) : $this
+```
+
+</td></tr>
+</tbody>
+</table>
+
 
 ```php
 // 设置 A 列垂直居中，自动换行
@@ -136,19 +560,120 @@ $worksheet->getStyle('A')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_C
 ```
 
 
-### Font
-|函数|描述|应用|
-|:---|:---|:---|
-|setName()|设置字体||
-|setSize()|设置字体大小|
+## Font
+|函数|描述|
+|:---|:---|
+|[setBold()](#method_font_setBold)|设置是否加粗|
+|[setColor()](#method_font_setColor)|设置字体颜色|
+|[setItalic()](#method_font_setItalic)|设置是否斜体|
+|[setName()](#method_font_setName)|设置字体|
+|[setSize()](#method_font_setSize)|设置字体大小|
 
-#### 应用
+
+### <span id="method_font_setBold">setBold()</span>
+
+<table>
+<thead><tr align="left"><th>
+setBold
+</th></tr></thead>
+<tbody>
+<tr><td>
+设置是否粗体
+
+```php
+public setBold(bool $bold) : $this
+```
+
+</td></tr>
+</tbody>
+</table>
+
+### <span id="method_font_setColor">setColor()</span>
+
+<table>
+<thead><tr align="left"><th>
+setColor
+</th></tr></thead>
+<tbody>
+<tr><td>
+设置颜色
+
+```php
+public setColor(Color $color) : $this
+```
+
+这种方式设置颜色可能还是有些繁琐，可以使用下面这种方式替换:
+
+```php
+$sheet->getStyle('A10')->getFont()->getColor()->setRGB('0000FF');
+```
+
+</td></tr>
+</tbody>
+</table>
+
+### <span id="method_font_setItalic">setItalic()</span>
+
+<table>
+<thead><tr align="left"><th>
+setItalic
+</th></tr></thead>
+<tbody>
+<tr><td>
+设置斜体
+
+```php
+public setItalic(bool $italic) : $this
+```
+
+</td></tr>
+</tbody>
+</table>
+
+
+### <span id="method_font_setName">setName()</span>
+
+<table>
+<thead><tr align="left"><th>
+setName
+</th></tr></thead>
+<tbody>
+<tr><td>
+设置名称
+
+```php
+public setName(string $fontname) : $this
+```
+
+</td></tr>
+</tbody>
+</table>
+
+### <span id="method_font_setSize">setSize()</span>
+
+<table>
+<thead><tr align="left"><th>
+setSize
+</th></tr></thead>
+<tbody>
+<tr><td>
+设置大小
+
+```php
+public setSize(mixed $sizeInPoints[, bool $nullOk = false ]) : $this
+```
+
+</td></tr>
+</tbody>
+</table>
+
+### 应用
 ```php
 // 级联设置字体以及大小
 $worksheet->getStyleByColumnAndRow(1, $row)->getFont()->setName('Arial')->setSize(10);
 ```
 
-### Fill
+## Fill
 |函数|描述|
 |:---|:---|
 |setFillType()|设置填充类型|
@@ -159,9 +684,6 @@ $worksheet->getStyleByColumnAndRow(1, $row)->getFont()->setName('Arial')->setSiz
 // 填充背景色
 $worksheet->getStyleByColumnAndRow($col, $row)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('D6E9AD');
 ```
-
-### Color
-
 
 ## DataValidation
 |函数|描述|应用|
